@@ -6,8 +6,10 @@ const ShoppingLayout = () => {
   return (
     <div className="flex flex-col overflow-hidden bg-white ">
         <ShoppingHeader/>
-        <div className="flex flex-col w-full"></div>
-        <Outlet/>
+        <div className="flex flex-col w-full">
+          <Outlet/>
+        </div>
+        
     </div>
   )
 }

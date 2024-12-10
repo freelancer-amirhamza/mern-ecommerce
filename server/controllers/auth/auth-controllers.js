@@ -35,7 +35,6 @@ const userRegister = async (req, res)=>{
 
 const userLogin = async (req, res)=>{
     const { email, password } = req.body;
-
     try {
         const checkUser = await User.findOne({email});
         if (!checkUser) {
@@ -44,7 +43,6 @@ const userLogin = async (req, res)=>{
                 message: "This user is not found, Please try again"
             })
         };
-
         const checkPasswordMatch = await bcrypt.compare(password, checkUser.password);
         if (!checkPasswordMatch) {
             return res.json({
@@ -59,7 +57,6 @@ const userLogin = async (req, res)=>{
             role: checkUser.role,
         }, "CLIENT_SECRET_KEY",
         {expiresIn: "50m"});
-
         res.cookie("token", token,{ httpOnly:true, secure:false }).json({
             success:true,
             message: "the user is logged in successfully",
@@ -83,7 +80,6 @@ const userLogout = (req, res)=>{
     res.clearCookie("token").json({
         success:true,
         message: "You're logged out successfully!",
-
     })
 }
 
