@@ -6,10 +6,14 @@ import { Card, CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import { brandOptionsMap, categoryOptionsMap } from "@/config";
 
-const ShoppingProductTile = ({ product }) => {
+const ShoppingProductTile = ({
+    product,
+    handleGetProductDetails,
+    handleAddToCart,
+}) => {
     return (
         <Card className="w-full mex-w-sm mx-auto">
-            <div className="">
+            <div className="" onClick={() => handleGetProductDetails(product?._id)}>
                 <div className="relative">
                     <img
                         src={product?.image}
@@ -43,10 +47,15 @@ const ShoppingProductTile = ({ product }) => {
                         ) : null}
                     </div>
                 </CardContent>
-                <CardFooter>
-                    <Button className="w-full">Add to Cart</Button>
-                </CardFooter>
             </div>
+            <CardFooter>
+                    <Button
+                        onClick={() => handleAddToCart(product?._id)}
+                        className="w-full"
+                    >
+                        Add to Cart
+                    </Button>
+                </CardFooter>
         </Card>
     );
 };

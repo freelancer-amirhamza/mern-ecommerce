@@ -7,16 +7,24 @@ import {
   MenuSquare,
   ShoppingCart,
 } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { shoppingViewHeaderMenuItems } from "@/config";
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
-import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import {
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { logoutUser } from "@/store/authSlice";
+import UserCartWrapper from "./cart-wrapper";
+import { getCartItems } from "@/store/shop/cart-slice";
 
 const MenuItems = () => {
   return (
@@ -36,18 +44,37 @@ const MenuItems = () => {
 };
 
 const HeaderRightContent = () => {
-  const {user} = useSelector(state => state.auth);
-  const navigate = useNavigate()
+  const { user } = useSelector((state) => state.auth);
+  const { cartItems } = useSelector((state) => state.shoppingCarts);
+
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const handleLogout = ()=>{
-    dispatch(logoutUser())
-  }
+  const [openCartSheet, setOpenCartSheet] = useState(false);
+
+  useEffect(() => {
+    dispatch(getCartItems(user?.id));
+  }, [dispatch]);
   return (
     <div className="flex flex-col  gap-4 lg:items-center lg:flex-row ">
-      <Button className=" " variant="outline" size="icon">
-        <ShoppingCart className=" w-8 h-8 " />
-        <span className="sr-only">User Cart</span>
-      </Button>
+      <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
+        <Button
+          onClick={() => setOpenCartSheet(true)}
+          className=" "
+          variant="outline"
+          size="icon"
+        >
+          <ShoppingCart className=" w-8 h-8 " />
+          <span className="sr-only">User Cart</span>
+        </Button>
+        <UserCartWrapper
+          cartItems={
+            cartItems && cartItems.items && cartItems.items.length > 0
+              ? cartItems.items
+              : []
+          }
+        />
+      </Sheet>
+
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="bg-black cursor-pointer">
@@ -56,16 +83,16 @@ const HeaderRightContent = () => {
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
-        <DropdownMenuContent side="right" className="w-56 bg-gray-200" >
+        <DropdownMenuContent side="right" className="w-56 bg-gray-200">
           <DropdownMenuLabel>Logged in as {user?.userName} </DropdownMenuLabel>
-          <DropdownMenuSeparator/>
-            <DropdownMenuItem onClick={()=> navigate("/shop/account") } >
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => navigate("/shop/account")}>
             <CircleUserRound className=" mr-2 w-6  h-6 " />
             <span className="font-semibold text-base ">Account</span>
-            </DropdownMenuItem>
-          <DropdownMenuSeparator/>
-          <DropdownMenuItem onClick={()=> handleLogout()} >
-            <LogOut className="mr-2 w-4 h-4 " /> 
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => dispatch(logoutUser())}>
+            <LogOut className="mr-2 w-4 h-4 " />
             <span className="font-semibold text-base ">Logout</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -92,15 +119,15 @@ const ShoppingHeader = () => {
           </SheetTrigger>
           <SheetContent className=" w-full max-w-xs" side="left">
             <MenuItems />
-            <HeaderRightContent/>
+            <HeaderRightContent />
           </SheetContent>
         </Sheet>
         <div className="hidden lg:block">
           <MenuItems />
         </div>
-          <div className="hidden lg:block" >
-            <HeaderRightContent />{" "}
-          </div>
+        <div className="hidden lg:block">
+          <HeaderRightContent />{" "}
+        </div>
       </div>
     </header>
   );

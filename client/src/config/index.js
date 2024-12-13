@@ -63,6 +63,7 @@ export const addProductFormElements = [
       { id: "kids", label: "Kids" },
       { id: "accessories", label: "Accessories" },
       { id: "footwear", label: "Footwear" },
+      { id: "foods", label: "Foods" },
     ],
   },
   {
@@ -75,6 +76,7 @@ export const addProductFormElements = [
       { id: "puma", label: "Puma" },
       { id: "levi", label: "Levi's" },
       { id: "zara", label: "Zara" },
+      { id: "nobrand", label: "No brand" },
       { id: "h&m", label: "H&M" },
     ],
   },
@@ -133,6 +135,11 @@ export const shoppingViewHeaderMenuItems = [
     path: "/shop/listing",
   },
   {
+    id: "foods",
+    label: "Foods",
+    path: "/shop/listing",
+  },
+  {
     id: "accessories",
     label: "Accessories",
     path: "/shop/listing",
@@ -150,6 +157,7 @@ export const categoryOptionsMap = {
   kids: "Kids",
   accessories: "Accessories",
   footwear: "Footwear",
+  foods: "Foods",
 };
 
 export const brandOptionsMap = {
@@ -158,6 +166,7 @@ export const brandOptionsMap = {
   puma: "Puma",
   levi: "Levi",
   zara: "Zara",
+  nobrand: "No Brand",
   "h&m": "H&M",
 };
 
@@ -168,6 +177,7 @@ export const filterOptions = {
     { id: "kids", label: "Kids" },
     { id: "accessories", label: "Accessories" },
     { id: "footwear", label: "Footwear" },
+    { id: "foods", label: "Foods" },
   ],
   brand: [
     { id: "nike", label: "Nike" },
@@ -176,6 +186,7 @@ export const filterOptions = {
     { id: "levi", label: "Levi's" },
     { id: "zara", label: "Zara" },
     { id: "h&m", label: "H&M" },
+    { id: "nobrand", label: "No brand" },
   ],
 };
 
