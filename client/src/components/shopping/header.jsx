@@ -2,12 +2,10 @@ import {
   CircleUserRound,
   House,
   LogOut,
-  LucideMenuSquare,
   Menu,
-  MenuSquare,
   ShoppingCart,
 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
@@ -25,19 +23,30 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { logoutUser } from "@/store/authSlice";
 import UserCartWrapper from "./cart-wrapper";
 import { getCartItems } from "@/store/shop/cart-slice";
+import { Label } from "../ui/label";
 
 const MenuItems = () => {
+  const navigate = useNavigate();
+
+  const handleNavigate = (getCurrentMenuItem) => {
+    sessionStorage.removeItem("filters");
+    const currentFilter =
+      getCurrentMenuItem.id !== "home"
+        ? { category: [getCurrentMenuItem.id] }
+        : null;
+    sessionStorage.setItem("filters", JSON.stringify(currentFilter));
+    navigate(getCurrentMenuItem.path);
+  };
   return (
     <nav className=" flex flex-col mb-3 lg:mb-0 lg:items-center lg:flex-row gap-6 ">
       {shoppingViewHeaderMenuItems.map((menuItem) => (
-        <Link
-          to={menuItem.path}
+        <Label
+          onClick={() => handleNavigate(menuItem)}
           key={menuItem.id}
-          className="text-sm font-medium"
+          className="text-sm font-medium cursor-pointer "
         >
-          {" "}
           {menuItem.label}{" "}
-        </Link>
+        </Label>
       ))}
     </nav>
   );
@@ -63,7 +72,12 @@ const HeaderRightContent = () => {
           variant="outline"
           size="icon"
         >
-          <ShoppingCart className=" w-8 h-8 " />
+          <ShoppingCart className=" w-8 h-8  relative " />
+          <span className="text-xs absolute top-1 mt-2 text-orange-600 font-extrabold ml-6">
+            {cartItems && cartItems.items && cartItems.items.length > 0
+              ? cartItems.items.length
+              : []}
+          </span>
           <span className="sr-only">User Cart</span>
         </Button>
         <UserCartWrapper
@@ -102,7 +116,6 @@ const HeaderRightContent = () => {
 };
 
 const ShoppingHeader = () => {
-  const { isAuthenticated } = useSelector((state) => state.auth);
   return (
     <header className="sticky w-full z-40 border-b bg-background ">
       <div className="flex items-center justify-between h-16 px-4 md:px-6 ">

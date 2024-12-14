@@ -58,7 +58,7 @@ const getProductDetails = async (req, res) => {
                 data: product,
             })
     } catch (error) {
-        console.log(error);
+        console.log(error); 
         res.status(500).json({
             success:false,
             message:"Something is wrong!"
