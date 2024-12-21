@@ -14,7 +14,7 @@ const initialsAddressFormData = {
   phone: "",
   notes: "",
 };
-const Address = () => {
+const Address = ({setCurrentSelectedAddress}) => {
   const [formData, setFormData] = useState(initialsAddressFormData);
   const dispatch = useDispatch();
   const [currentUpdatedAddress, setCurrentUpdatedAddress] = useState(null)
@@ -103,9 +103,11 @@ const Address = () => {
   }, [dispatch])
   return (
     <Card>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mb-5 p-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full  mb-5 p-3">
         {addressList && addressList.length > 0 ? addressList.map(
-          (addressItem) => <AddressCard key={addressItem.id}
+          (addressItem) => <AddressCard 
+          key={addressItem.id}
+          setCurrentSelectedAddress={setCurrentSelectedAddress}
             addressInfo={addressItem}
             handleDeleteAddress={handleDeleteAddress}
             handleUpdateAddress={handleUpdateAddress}

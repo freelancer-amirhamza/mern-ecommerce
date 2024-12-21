@@ -2,8 +2,8 @@
 import React from 'react';
 import image from "../../assets/account.jpg"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import Orders from '@/components/shopping/orders';
 import Address from '@/components/shopping/address';
+import ShoppingOrders from '@/components/shopping/orders';
 
 function ShoppingAccount() {
   return (
@@ -22,7 +22,7 @@ function ShoppingAccount() {
               <TabsTrigger value="orders" >Orders</TabsTrigger>
               <TabsTrigger value="address" >Address</TabsTrigger>
             </TabsList>
-            <TabsContent value="orders" ><Orders/></TabsContent>
+            <TabsContent value="orders" ><ShoppingOrders/></TabsContent>
             <TabsContent value="address"><Address/></TabsContent>
           </Tabs>
         </div>

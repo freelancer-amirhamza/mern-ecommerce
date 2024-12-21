@@ -59,7 +59,20 @@ const HeaderRightContent = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [openCartSheet, setOpenCartSheet] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalQty, setTotalQty] = useState(0)
 
+  useEffect(() => {
+    const qty = cartItems?.items?.reduce((prev, currentItem) => {
+      return prev + currentItem.quantity
+    }, 0)
+    setTotalQty(qty);
+    const tPrice = cartItems?.items?.reduce((sum, currentItem) => {
+      return sum + (currentItem?.salePrice > 0 ?
+        currentItem?.salePrice : currentItem?.price) * currentItem?.quantity
+    },0)
+    setTotalPrice(tPrice)
+  }, [cartItems])
   useEffect(() => {
     dispatch(getCartItems(user?.id));
   }, [dispatch]);
@@ -68,19 +81,22 @@ const HeaderRightContent = () => {
       <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
         <Button
           onClick={() => setOpenCartSheet(true)}
-          className=" "
+          className=" w-full justify-between  flex"
           variant="outline"
-          size="icon"
         >
-          <ShoppingCart className=" w-8 h-8  relative " />
-          <span className="text-xs absolute top-1 mt-2 text-orange-600 font-extrabold ml-6">
-            {cartItems && cartItems.items && cartItems.items.length > 0
-              ? cartItems.items.length
-              : []}
+          <ShoppingCart className=" w-8 h-8  " />
+          <div className="flex flex-col ">
+          <span className="text-xs  text-orange-600 text-start  font-extrabold ">
+            {totalQty} items
           </span>
-          <span className="sr-only">User Cart</span>
+          <span className="text-xs  text-orange-600 text-start font-extrabold ">
+            ${totalPrice}
+          </span>
+          </div>
+          
         </Button>
         <UserCartWrapper
+          setOpenCartSheet={setOpenCartSheet}
           cartItems={
             cartItems && cartItems.items && cartItems.items.length > 0
               ? cartItems.items

@@ -8,6 +8,7 @@ const adminProductRouter = require("./routers/admin/products-routes.js");
 const shopProductRouter = require("./routers/shop/products-router.js");
 const shopCartRouter = require("./routers/shop/cart-routes.js");
 const shopAddressRouter = require("./routers/shop/address-routes.js");
+const shopOrderRouter = require("./routers/shop/order-routes.js");
 
 app.use(cors({
     origin: "http://localhost:5173",
@@ -28,7 +29,8 @@ app.use("/api/auth", authRouter);
 app.use("/api/admin/products", adminProductRouter);
 app.use("/api/shop/products", shopProductRouter );
 app.use("/api/shop/cart", shopCartRouter);
-app.use("/api/shop/address", shopAddressRouter)
+app.use("/api/shop/address", shopAddressRouter);
+app.use("/api/shop/order", shopOrderRouter);
 
 app.get("/",(req, res)=>{
     res.send("<h1> Welcome to server site</h1> ")
