@@ -15,8 +15,27 @@ import { setProductDetails } from "@/store/shop/shoppingSlice";
 const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
+    const { cartItems } = useSelector((state) => state.shoppingCarts);
 
-    const handleAddToCart = (getCurrentProductId) => {
+    const handleAddToCart = (getCurrentProductId, getTotalStock) => {
+        let getCartItem = cartItems.items || [];
+
+        if (getCartItem.length) {
+            const indexOfCurrentItem = getCartItem.findIndex(
+                (item) => item.productId === getCurrentProductId
+            );
+            if (indexOfCurrentItem > -1) {
+                const getQuantity = getCartItem[indexOfCurrentItem].quantity;
+                if (getQuantity + 1 > getTotalStock) {
+                    toast({
+                        title: `Only ${getQuantity} quantity can be added for this item`,
+                        variant: "destructive",
+                    });
+
+                    return;
+                }
+            }
+        }
         dispatch(
             addToCart({
                 userId: user?.id,
@@ -33,7 +52,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
         });
     };
     return (
-        <Dialog open={open} onOpenChange={()=>{setOpen(), dispatch(setProductDetails())}}>
+        <Dialog open={open} onOpenChange={() => { setOpen(), dispatch(setProductDetails()) }}>
             <DialogContent className="grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[85vw] lg:max-w-[75vw] ">
                 <div className="relative overflow-hidden rounded-lg ">
                     <img
@@ -80,12 +99,21 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                         <span className="">{productDetails?.brand} </span>
                     </div>
                     <div className="mt-5 mb-5">
-                        <Button
-                            onClick={() => handleAddToCart(productDetails?._id)}
-                            className="w-full"
-                        >
-                            Add to Cart
-                        </Button>
+                        {productDetails?.totalStock === 0 ?
+                            <Button
+                                className="w-full cursor-not-allowed opacity-50 "
+                            > Out of stock</Button> :
+                            <Button
+                                onClick={() => handleAddToCart(
+                                    productDetails?._id,
+                                    productDetails?.totalStock
+                                  )}
+                                className="w-full"
+                            >
+                                Add to Cart
+                            </Button>
+                        }
+
                     </div>
                     <Separator />
                     <div className="max-h-[300px] overflow-auto ">

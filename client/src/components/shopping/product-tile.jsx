@@ -20,11 +20,14 @@ const ShoppingProductTile = ({
                         alt={product.title}
                         className="w-full h-[300px] rounded-t-lg object-cover "
                     />
-                    {product?.salePrice > 0 ? (
+                    {product?.totalStock <= 0 ?
                         <Badge className=" absolute top-2 px-1 py-0 left-2 bg-red-500 hover:bg-red-600 ">
-                            Sale
-                        </Badge>
-                    ) : null}
+                            Out of stack
+                        </Badge> :
+                        product?.totalStock <= 10 ?
+                            <Badge className=" absolute top-2 px-1 py-0 left-2 bg-red-500 hover:bg-red-600 ">
+                                Only {product?.totalStock} products left!
+                            </Badge> : null}
                 </div>
                 <CardContent className="p-4">
                     <h2 className="text-xl font-bold mb-2  "> {product.title} </h2>
@@ -49,13 +52,21 @@ const ShoppingProductTile = ({
                 </CardContent>
             </div>
             <CardFooter>
+                {product?.totalStock <= 0 ?
                     <Button
-                        onClick={() => handleAddToCart(product?._id)}
+                        
+                        className="w-full cursor-not-allowed opacity-55"
+                    >
+                        Out of stock
+                    </Button> :
+                    <Button
+                        onClick={() => handleAddToCart(product?._id, product?.totalStock)}
                         className="w-full"
                     >
                         Add to Cart
                     </Button>
-                </CardFooter>
+                }
+            </CardFooter>
         </Card>
     );
 };

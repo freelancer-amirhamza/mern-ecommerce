@@ -7,7 +7,7 @@ import UserCartContent from "./cart-items-content";
 import { useNavigate } from "react-router-dom";
 
 const UserCartWrapper = ({ cartItems , setOpenCartSheet}) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const totalCartAmount =
     cartItems && cartItems.length > 0
       ? cartItems.reduce(
@@ -20,14 +20,14 @@ const UserCartWrapper = ({ cartItems , setOpenCartSheet}) => {
         )
       : 0;
   return (
-    <SheetContent className="sm:max-w-md ">
+    <SheetContent className="sm:max-w-md overflow-scroll ">
       <SheetHeader>
         <SheetTitle>Your Cart</SheetTitle>
       </SheetHeader>
       <div className="mt-8 space-y-4">
         {cartItems && cartItems.length > 0
           ? cartItems.map((item) => (
-              <UserCartContent cartItems={item} key={item.id} />
+              <UserCartContent cartItem={item} key={item} />
             ))
           : null}
       </div>

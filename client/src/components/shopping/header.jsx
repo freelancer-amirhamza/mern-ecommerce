@@ -6,7 +6,7 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,15 +27,21 @@ import { Label } from "../ui/label";
 
 const MenuItems = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handleNavigate = (getCurrentMenuItem) => {
     sessionStorage.removeItem("filters");
     const currentFilter =
-      getCurrentMenuItem.id !== "home"
-        ? { category: [getCurrentMenuItem.id] }
+      getCurrentMenuItem.id !== "home" &&
+        getCurrentMenuItem?.id !== "products" &&
+        getCurrentMenuItem?.id !== "search" ?
+        { category: [getCurrentMenuItem.id] }
         : null;
     sessionStorage.setItem("filters", JSON.stringify(currentFilter));
-    navigate(getCurrentMenuItem.path);
+    location.pathname.includes("listing") && currentFilter !== null ?
+      setSearchParams(`?category=${getCurrentMenuItem.id}`) :
+      navigate(getCurrentMenuItem.path);
   };
   return (
     <nav className=" flex flex-col mb-3 lg:mb-0 lg:items-center lg:flex-row gap-6 ">
@@ -70,7 +76,7 @@ const HeaderRightContent = () => {
     const tPrice = cartItems?.items?.reduce((sum, currentItem) => {
       return sum + (currentItem?.salePrice > 0 ?
         currentItem?.salePrice : currentItem?.price) * currentItem?.quantity
-    },0)
+    }, 0)
     setTotalPrice(tPrice)
   }, [cartItems])
   useEffect(() => {
@@ -86,14 +92,14 @@ const HeaderRightContent = () => {
         >
           <ShoppingCart className=" w-8 h-8  " />
           <div className="flex flex-col ">
-          <span className="text-xs  text-orange-600 text-start  font-extrabold ">
-            {totalQty} items
-          </span>
-          <span className="text-xs  text-orange-600 text-start font-extrabold ">
-            ${totalPrice}
-          </span>
+            <span className="text-xs  text-orange-600 text-start  font-extrabold ">
+              {totalQty} items
+            </span>
+            <span className="text-xs  text-orange-600 text-start font-extrabold ">
+              ${totalPrice}
+            </span>
           </div>
-          
+
         </Button>
         <UserCartWrapper
           setOpenCartSheet={setOpenCartSheet}

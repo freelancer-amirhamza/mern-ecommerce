@@ -67,11 +67,11 @@ const AdminProducts = () => {
           console.log(data);
           if (data?.payload?.success) {
             setIsLoading(true);
-            dispatch(addProduct());
             setOpenCreateProductDialog(false);
             setImageFile(null);
             setFormData(initialFormData);
             setIsLoading(false);
+            window.location.reload()
             toast({
               title: "The Product is has been added successfully",
             });

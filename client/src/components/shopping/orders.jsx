@@ -53,8 +53,11 @@ const ShoppingOrders = () => {
               <TableCell>{orderItem?._id} </TableCell>
               <TableCell>{orderItem?.orderDate.split("T")[0]} </TableCell>
               <TableCell>
-                <Badge className={`${orderItem?.orderStatus === "confirmed" ? "bg-green-600" : "bg-orange-500"}`} >{orderItem?.orderStatus} </Badge>
-                 </TableCell>
+              <Badge className={`${orderItem?.orderStatus === "confirmed" ? "bg-green-600" :
+                                orderItem?.orderStatus === "rejected" ? "bg-red-600"
+                                : "bg-orange-600"}`} >{orderItem?.orderStatus}
+              </Badge>
+              </TableCell>
               <TableCell>${orderItem?.totalAmount} </TableCell>
               <TableCell>
                 <Dialog open={openDetailsDialog} onOpenChange={()=>{
