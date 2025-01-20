@@ -57,7 +57,7 @@ const userLogin = async (req, res)=>{
             role: checkUser.role,
         }, "CLIENT_SECRET_KEY",
         {expiresIn: "50m"});
-        res.cookie("token", token,{ httpOnly:true, secure:false }).json({
+        res.cookie("token", token,{ httpOnly:true, secure:true }).json({
             success:true,
             message: "the user is logged in successfully",
             user:{
