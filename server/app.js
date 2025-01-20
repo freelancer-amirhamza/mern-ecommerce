@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+require("dotenv").config();
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 require("./config/database.js");
@@ -17,7 +18,7 @@ const commonRouter = require("./routers/common/feature-routes.js");
 
 app.use(cors(
     {
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_BASE_URL,
     methods:['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: [
         'Content-Type',

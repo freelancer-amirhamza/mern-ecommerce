@@ -11,21 +11,21 @@ const initialState = {
 
 export const getAllOrdersByAdmin = createAsyncThunk("/admin/getOrdersByAdmin",
     async()=>{
-        const response = await axios.get("http://localhost:4000/api/admin/orders/get");
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/orders/get`);
         return response.data;
     }
 );
 
 export const getOrderDetailsForAdmin = createAsyncThunk("/admin/getOrderDetailsForAdmin", 
     async(id)=>{
-        const response = await axios.get(`http://localhost:4000/api/admin/orders/details/${id}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/orders/details/${id}`);
         return response.data;
     }
 );
 
 export const updateOrderStatus = createAsyncThunk("/admin/updateOrderStatus",
     async({id, orderStatus})=>{
-        const response = await axios.put(`http://localhost:4000/api/admin/orders/update/${id}`,
+        const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/admin/orders/update/${id}`,
             {
                 orderStatus
             }

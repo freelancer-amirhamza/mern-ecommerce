@@ -10,7 +10,7 @@ const initialState = {
 
 export const addReviews = createAsyncThunk("/shop/createReview",
     async (data) => {
-        const response = await axios.post("http://localhost:4000/api/shop/review/add", data);
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/shop/review/add`, data);
         return response.data;
     }
 );
@@ -18,7 +18,7 @@ export const addReviews = createAsyncThunk("/shop/createReview",
 
 export const getReviews = createAsyncThunk("/shop/getReviews",
     async (productId) => {
-        const response = await axios.get(`http://localhost:4000/api/shop/review/${productId}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/shop/review/${productId}`);
         return response.data;
     }
 );
