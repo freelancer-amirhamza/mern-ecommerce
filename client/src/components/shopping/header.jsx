@@ -21,7 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { logoutUser } from "@/store/authSlice";
+import { resetTokenAndCredential } from "@/store/authSlice";
 import UserCartWrapper from "./cart-wrapper";
 import { getCartItems } from "@/store/shop/cart-slice";
 import { Label } from "../ui/label";
@@ -80,6 +80,13 @@ const HeaderRightContent = () => {
     }, 0)
     setTotalPrice(tPrice)
   }, [cartItems])
+
+  const handleLogout = ()=>{
+    // dispatch(logoutUser())
+    dispatch(resetTokenAndCredential());
+    sessionStorage.clear();
+    navigate("/auth/login");
+  }
   useEffect(() => {
     dispatch(getCartItems(user?.id));
   }, [dispatch]);
@@ -128,7 +135,7 @@ const HeaderRightContent = () => {
             <span className="font-semibold text-base ">Account</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => dispatch(logoutUser())}>
+          <DropdownMenuItem onClick={handleLogout}>
             <LogOut className="mr-2 w-4 h-4 " />
             <span className="font-semibold text-base ">Logout</span>
           </DropdownMenuItem>

@@ -3,16 +3,17 @@ const User = require('../../models/User');
 const jwt = require("jsonwebtoken");
 // middleware 
 
-const userRegister = async (req, res)=>{
+const userRegister = async (req, res) => {
     const { userName, email, password } = req.body;
 
     try {
-        const checkUser = await User.findOne({email});
-        if(checkUser){ 
+        const checkUser = await User.findOne({ email });
+        if (checkUser) {
             return res.json({
-            success: false,
-            message: "The email is already exited, Please try again with another email"
-        })}
+                success: false,
+                message: "The email is already exited, Please try again with another email"
+            })
+        }
         const hashPassword = await bcrypt.hash(password, 12);
         const newUser = new User({
             userName,
@@ -33,20 +34,20 @@ const userRegister = async (req, res)=>{
     }
 }
 
-const userLogin = async (req, res)=>{
+const userLogin = async (req, res) => {
     const { email, password } = req.body;
     try {
-        const checkUser = await User.findOne({email});
+        const checkUser = await User.findOne({ email });
         if (!checkUser) {
             return res.json({
-                success:false,
+                success: false,
                 message: "This user is not found, Please try again"
             })
         };
         const checkPasswordMatch = await bcrypt.compare(password, checkUser.password);
         if (!checkPasswordMatch) {
             return res.json({
-                success:false,
+                success: false,
                 message: "Incorrect Password, Please enter valid password",
             })
         };
@@ -56,11 +57,23 @@ const userLogin = async (req, res)=>{
             userName: checkUser.userName,
             role: checkUser.role,
         }, "CLIENT_SECRET_KEY",
-        {expiresIn: "50m"});
-        res.cookie("token", token,{ httpOnly:true, secure:true }).json({
-            success:true,
-            message: "the user is logged in successfully",
-            user:{
+            { expiresIn: "50m" });
+        // res.cookie("token", token,{ httpOnly:true, secure:true }).json({
+        //     success:true,
+        //     message: "the user is logged in successfully",
+        //     user:{
+        //         id: checkUser._id,
+        //         email: checkUser.email,
+        //         userName: checkUser.userName,
+        //         role: checkUser.role,
+        //     }
+        // })
+
+        res.status(201).json({
+            success: true,
+            message: "The User is logged successfully!",
+            token,
+            user: {
                 id: checkUser._id,
                 email: checkUser.email,
                 userName: checkUser.userName,
@@ -76,9 +89,9 @@ const userLogin = async (req, res)=>{
     }
 }
 
-const userLogout = (req, res)=>{
+const userLogout = (req, res) => {
     res.clearCookie("token").json({
-        success:true,
+        success: true,
         message: "You're logged out successfully!",
     })
 }
@@ -90,7 +103,6 @@ const userLogout = (req, res)=>{
 //         success: false,
 //         message: "Unauthorized user!",
 //       });
-  
 //     try {
 //       const decoded = jwt.verify(token, "CLIENT_SECRET_KEY");
 //       req.user = decoded;
@@ -103,4 +115,24 @@ const userLogout = (req, res)=>{
 //     }
 //   };
 
-module.exports = {userRegister, userLogin, userLogout, };
+const authMiddleware = (req, res, next) => {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1]
+    if (!token)
+        return res.status(401).json({
+            success: false,
+            message: "Unauthorized user!",
+        });
+    try {
+        const decoded = jwt.verify(token, "CLIENT_SECRET_KEY");
+        req.user = decoded;
+        next();
+    } catch (error) {
+        res.status(401).json({
+            success: false,
+            message: "Unauthorized user!",
+        });
+    }
+};
+
+module.exports = { userRegister, userLogin, userLogout, };
