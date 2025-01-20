@@ -1,6 +1,6 @@
-import { Card, CardHeader, CardTitle } from '@/components/ui/card'
+import image from "../../assets/orderSuccess.gif"
 import { capturePayment } from '@/store/shop/order-slice';
-import React, { useEffect } from 'react';
+import  { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
@@ -23,11 +23,19 @@ const PaymentReturnPage = () => {
     })
   }, [payerId, paymentId, dispatch]);
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Payment is processing...! Please wait..!</CardTitle>
-      </CardHeader>
-    </Card>
+    <>
+    <div className="w-full min-h-screen justify-center flex ">
+          <div className="container mx-auto w-full">
+          <img className='mx-auto w-1/2 rounded-lg' 
+          src={image}
+          loading='lazy'
+          alt="" />
+          <h2 className='text-center text-lg font-semibold' >Thank You! Your Payment Was Successful 🙌 </h2>
+          <h2 className='text-center text-lg font-semibold' >Processing order... </h2>
+          </div>
+        </div>
+      
+    </>
   )
 }
 

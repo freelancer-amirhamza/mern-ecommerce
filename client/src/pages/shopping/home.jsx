@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import image1 from "../../assets/banner-1.webp";
 import image2 from "../../assets/banner-2.webp";
-import image3 from "../../assets/banner-3.webp";
+import image3 from "../../assets/banner-3.png";
+import image4 from "../../assets/banner-4.png";
 import {
   Airplay,
   BabyIcon,
@@ -30,6 +31,7 @@ import { useNavigate } from "react-router-dom";
 import { addToCart, getCartItems } from "@/store/shop/cart-slice";
 import { toast } from "@/hooks/use-toast";
 import ProductDetailsDialog from "@/components/shopping/product-details";
+import { getFeatureImages } from "@/store/common/feature-slice";
 
 const categoriesWithIcons = [
   { id: "men", label: "Men", icon: ShirtIcon },
@@ -48,13 +50,14 @@ const brandsWithIcons = [
   { id: "h&m", label: "H&M", icon: Heater },
 ];
 const ShoppingHome = () => {
-  const slides = [image1, image2, image3];
+  const slides = [image1, image2, image3, image4];
   const [currentSlide, setCurrentSlide] = useState(0);
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false)
   const dispatch = useDispatch();
   const { productsList, productDetails } = useSelector((state) => state.shoppingProducts);
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
+  const {featureImagesList} = useSelector((state)=> state.commonSlice)
 
 
 
@@ -89,7 +92,7 @@ const ShoppingHome = () => {
     sessionStorage.setItem("filters", JSON.stringify(currentFilter));
     navigate("/shop/listing");
   };
-  console.log(productsList, "it's ok");
+
   useEffect(() => {
     dispatch(
       getAllFilteredProducts({ filterParams: {}, sortParams: "priceLoToHigh" })
@@ -98,31 +101,35 @@ const ShoppingHome = () => {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
-    }, 10000);
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % featureImagesList.length);
+    }, 6000);
     return () => clearInterval(timer);
-  });
+  },[featureImagesList]);
 
   useEffect(() => {
     if (productDetails !== null) setOpenDetailsDialog(true);
   }, [productDetails]);
+
+  useEffect(()=>{
+    dispatch(getFeatureImages())
+  },[dispatch])
   return (
     <div className="flex flex-col min-h-screen">
       <div className="relative w-full h-[600px] overflow-hidden ">
-        {slides.map((slide, index) => (
+        {featureImagesList && featureImagesList.length > 0 ? featureImagesList.map((slide, index) => (
           <img
-            src={slide}
+            src={slide.image}
             key={index}
             alt={slide}
             className={`${
               index === currentSlide ? "opacity-100" : "opacity-0"
             } absolute top-0 left-0 w-full h-full object-contain transition-opacity duration-1000 `}
           />
-        ))}
+        )): null }
         <Button
           onClick={() =>
             setCurrentSlide(
-              (prevSlide) => (prevSlide - 1 + slides.length) % slides.length
+              (prevSlide) => (prevSlide - 1 + featureImagesList.length) % featureImagesList.length
             )
           }
           variant="outline"
@@ -133,7 +140,7 @@ const ShoppingHome = () => {
         </Button>
         <Button
           onClick={() =>
-            setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length)
+            setCurrentSlide((prevSlide) => (prevSlide + 1) % featureImagesList.length)
           }
           variant="outline"
           size="icon"

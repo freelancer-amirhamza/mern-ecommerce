@@ -18,20 +18,24 @@ const ShoppingCheckout = () => {
 
 
   const handleOrderPaymentData = () => {
-
-    if(currentSelectedAddress === null){
-      return toast({
-        title: "Please Select Your Address",
-        variant: "destructive"
-      })
-    };
     if(cartItems.length === 0){
       toast({
         title: "Your cart is empty!",
         description: "please add products to processing payment",
         variant: "destructive",
       })
+      return;
     }
+
+    if(currentSelectedAddress === null){
+      toast({
+        title: "Please Select Your Address",
+        variant: "destructive"
+      })
+      return;
+    };
+
+    
     const orderData = {
       userId: user?.id,
       cartId: cartItems?._id,
@@ -68,11 +72,13 @@ const ShoppingCheckout = () => {
         setIsPaymentStart(false);
       }
     });
+  }
 
-    if(approvalURL){
+
+  
+  if(approvalURL){
       window.location.href = approvalURL;
     }
-  }
 
   const totalCartAmount =
     cartItems && cartItems?.items && cartItems?.items?.length > 0
@@ -87,18 +93,20 @@ const ShoppingCheckout = () => {
       : 0;
   return (
 
-    <div className="flex flex-col">
+    <div className="flex flex-col ">
       <div className="relative h-[300px] w-full overflow-hidden ">
         <img src={image}
           className='w-full h-full object-cover object-center '
           alt="" />
       </div>
-      <div className="grid w-full grid-cols-1 sm:grid-cols-2  gap-3 p-5 m-5">
-        <Address setCurrentSelectedAddress={setCurrentSelectedAddress} />
-        <div className="flex flex-col gap-5 p-5 mt-5">
+      <div className="flex container mx-auto w-full flex-col-reverse md:flex-row  gap-3 p-5 m-5">
+        <Address 
+        selectedId={currentSelectedAddress}
+        setCurrentSelectedAddress={setCurrentSelectedAddress} />
+        <div className="flex flex-col w-full border rounded-sm flex-1 gap-5 p-5 mt-5">
           {cartItems && cartItems?.items && cartItems?.items.length > 0 ?
             cartItems?.items.map(
-              (item) => <UserCartContent cartItems={item} key={item.id} />) : null}
+              (item) => <UserCartContent cartItem={item} key={item.id} />) : null}
           <div className="mt-8 space-y-4">
             <div className="flex justify-between">
               <span className="font-bold">Total</span>
@@ -106,7 +114,7 @@ const ShoppingCheckout = () => {
             </div>
           </div>
           <div className="mt-4 w-full">
-            <Button onClick={handleOrderPaymentData} className="w-full " > Place Order For Payment</Button>
+            <Button onClick={handleOrderPaymentData} className="w-full " > {isPaymentStart ? "Processing Paypal Payment..." : "Place Order For Payment" }</Button>
           </div>
         </div>
 

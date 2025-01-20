@@ -72,7 +72,6 @@ const shoppingOrderSlice = createSlice({
             state.isLoading = false;
             state.approvalURL =action.payload.approvalURL;
             state.orderId = action.payload.orderId;
-
         }).addCase(capturePayment.rejected, (state)=>{
             state.isLoading = false;
             state.approvalURL = null;

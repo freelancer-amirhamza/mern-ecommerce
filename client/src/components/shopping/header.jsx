@@ -4,6 +4,7 @@ import {
   LogOut,
   Menu,
   ShoppingCart,
+  Store,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
@@ -87,13 +88,13 @@ const HeaderRightContent = () => {
       <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
         <Button
           onClick={() => setOpenCartSheet(true)}
-          className=" w-full justify-between  flex"
+          className=" w-full justify-between border-1 border-orange-200 hover:border-orange-500 flex"
           variant="outline"
         >
           <ShoppingCart className=" w-8 h-8  " />
           <div className="flex flex-col ">
-            <span className="text-xs  text-orange-600 text-start  font-extrabold ">
-              {totalQty} items
+            <span className="text-xs text-orange-600 text-start  font-extrabold ">
+              {totalQty > 0 ? totalQty : 0} items
             </span>
             <span className="text-xs  text-orange-600 text-start font-extrabold ">
               ${totalPrice}
@@ -142,8 +143,8 @@ const ShoppingHeader = () => {
     <header className="sticky w-full z-40 border-b bg-background ">
       <div className="flex items-center justify-between h-16 px-4 md:px-6 ">
         <Link to="/shop/home" className="flex items-center gap-2 ">
-          <House className="h-7 w-7 " />
-          <span className="font-extrabold  text-3xl"> Ecommerce </span>
+        <Store color="#c76c05" className="h-7 w-7 "  absoluteStrokeWidth />
+          <span className="font-extrabold text-orange-500 text-3xl"> KAZI BAZAR </span>
         </Link>
         <Sheet>
           <SheetTrigger asChild>

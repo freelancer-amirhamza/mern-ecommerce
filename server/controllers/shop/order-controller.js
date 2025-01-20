@@ -5,6 +5,104 @@ const Product = require("../../models/Product");
 
 
 
+
+const SSLCommerzPayment = require('sslcommerz-lts')
+const store_id = 'mysho65da069a5577d'
+const store_passwd = 'mysho65da069a5577d@ssl'
+const is_live = false //true for live, false for sandbox
+
+const createNewOrder = async (req, res) => {
+   try {
+      const {
+         userId,
+         cartId,
+         cartItems,
+         addressInfo,
+         orderStatus,
+         paymentMethod,
+         paymentStatus,
+         totalAmount,
+         orderDate,
+         orderUpdateDate,
+         paymentId,
+         payerId,
+      } = req.body;
+
+      const data = {
+         userId,
+         cartId,
+         cartItems,
+         addressInfo,
+         orderStatus,
+         paymentMethod,
+         paymentStatus,
+         orderDate,
+         orderUpdateDate,
+         paymentId,
+         payerId,
+         total_amount: totalAmount,
+         tran_id: 'REF123', // use unique tran_id for each api call
+         success_url: 'http://localhost:5173/shop/home/',
+         fail_url: 'http://localhost:5173/shop/paypal-return',
+         cancel_url: 'http://localhost:5173/shop/paypal-cancel',
+         ipn_url: 'http://localhost:3030/ipn',
+         shipping_method: 'Courier',
+         product_name: 'Computer.',
+         product_category: 'Electronic',
+         product_profile: 'general',
+         cus_name: 'Customer Name',
+         cus_email: 'customer@example.com',
+         cus_add1: 'Dhaka',
+         cus_add2: 'Dhaka',
+         cus_city: 'Dhaka',
+         cus_state: 'Dhaka',
+         cus_postcode: '1000',
+         cus_country: 'Bangladesh',
+         cus_phone: '01711111111',
+         cus_fax: '01711111111',
+         ship_name: 'Customer Name',
+         ship_add1: 'Dhaka',
+         ship_add2: 'Dhaka',
+         ship_city: 'Dhaka',
+         ship_state: 'Dhaka',
+         ship_postcode: 1000,
+         ship_country: 'Bangladesh',
+      }
+
+     const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live)
+    sslcz.init(data).then(apiResponse => {
+        // Redirect the user to payment gateway
+        let GatewayPageURL = apiResponse.GatewayPageURL
+        res.status(200).send({approvalURL: GatewayPageURL})
+        console.log('Redirecting to: ', apiResponse)
+    });
+
+    const newlyCreatedOrder = new Order({
+      userId,
+      cartId,
+      cartItems,
+      addressInfo,
+      orderStatus,
+      paymentMethod,
+      paymentStatus,
+      totalAmount,
+      orderDate,
+      orderUpdateDate,
+      paymentId,
+      payerId,
+   });
+   await newlyCreatedOrder.save();
+
+   
+   } catch (error) {
+      console.log(error)
+      res.status(500).json({
+         success: false,
+         message: "something is wrong!"
+      })
+   }
+}
+
 const createOrder = async (req, res) => {
    try {
       const {
@@ -108,10 +206,10 @@ const capturePayment = async (req, res) => {
       order.paymentId = paymentId;
       order.payerId = payerId;
 
-      for( let item of order.cartItems){
+      for (let item of order.cartItems) {
          let product = await Product.findById(item.productId);
 
-         if(!product){
+         if (!product) {
             return res.status(404).json({
                success: false,
                message: `Not enough stock for this product ${product.title}`
@@ -170,7 +268,7 @@ const getOrderDetails = async (req, res) => {
       const { id } = req.params;
       const order = await Order.findById(id);
       if (!order) {
-         return res.status(404).json({  
+         return res.status(404).json({
             success: false,
             message: "The order not found!"
          })
@@ -188,4 +286,4 @@ const getOrderDetails = async (req, res) => {
    }
 }
 
-module.exports = { createOrder, capturePayment, getOrdersByUser, getOrderDetails };
+module.exports = { createOrder,createNewOrder, capturePayment, getOrdersByUser, getOrderDetails };

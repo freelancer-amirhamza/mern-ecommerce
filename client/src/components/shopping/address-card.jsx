@@ -5,12 +5,15 @@ import { Label } from '../ui/label'
 import { Button } from '../ui/button'
 import { Checkbox } from '../ui/checkbox';
 
-const AddressCard = ({addressInfo, handleUpdateAddress, handleDeleteAddress, setCurrentSelectedAddress}) => {
+const AddressCard = ({addressInfo, handleUpdateAddress, handleDeleteAddress, setCurrentSelectedAddress, selectedId}) => {
     
   return (
-    <Card  >
+    <Card onClick={setCurrentSelectedAddress? ()=> setCurrentSelectedAddress(addressInfo): null}
+    className={`cursor-pointer border-orange-400 
+      ${ selectedId?._id === addressInfo?._id ? "border-orange-600 border-[4px]" : "border-black"}
+      `}
+    >
         <CardContent className="grid p-5 capitalize gap-4 relative " >
-            <Checkbox onClick={setCurrentSelectedAddress && setCurrentSelectedAddress?.length === 1 ? ()=> setCurrentSelectedAddress(addressInfo): null} className='p-0 rounded-full h-5 w-5 absolute right-2 top-2 items-end' />
             <Label className="text-[16px] font-semibold ">Address: <span className=" font-normal ">{addressInfo.address}</span> </Label>
             <Label className="text-[16px] font-semibold ">City: <span className=" font-normal ">{addressInfo.city}</span> </Label>
             <Label className="text-[16px] font-semibold ">Pincode: <span className=" font-normal ">{addressInfo.pinCode}</span> </Label>

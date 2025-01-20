@@ -11,10 +11,12 @@ const shopCartRouter = require("./routers/shop/cart-routes.js");
 const shopAddressRouter = require("./routers/shop/address-routes.js");
 const shopOrderRouter = require("./routers/shop/order-routes.js");
 const shopSearchRouter = require("./routers/shop/search-routes.js");
+const shopReviewRouter = require("./routers/shop/review-routes.js");
+const commonRouter = require("./routers/common/feature-routes.js");
 
 
-
-app.use(cors({
+app.use(cors(
+    {
     origin: "http://localhost:5173",
     methods:['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: [
@@ -25,7 +27,8 @@ app.use(cors({
         'Pragma', 
     ],
     credentials: true,
-}));
+})
+);
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use(cookieParser());
@@ -38,6 +41,8 @@ app.use("/api/shop/cart", shopCartRouter);
 app.use("/api/shop/address", shopAddressRouter);
 app.use("/api/shop/order", shopOrderRouter);
 app.use("/api/shop/search", shopSearchRouter);
+app.use("/api/shop/review", shopReviewRouter);
+app.use("/api/common/feature", commonRouter );
 
 app.get("/",(req, res)=>{
     res.send("<h1> Welcome to server site</h1> ")

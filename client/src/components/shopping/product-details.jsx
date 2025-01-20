@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 // eslint-disable-next-line no-unused-vars
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Separator } from "@radix-ui/react-dropdown-menu";
@@ -11,11 +11,50 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart, getCartItems } from "@/store/shop/cart-slice";
 import { toast } from "@/hooks/use-toast";
 import { setProductDetails } from "@/store/shop/shoppingSlice";
+import { Label } from "../ui/label";
+import StarRating from "../common/star-rating";
+import { addReviews, getReviews } from "@/store/shop/review-slice";
 
 const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
     const { cartItems } = useSelector((state) => state.shoppingCarts);
+    const {reviews } = useSelector((state)=> state.reviewsSlice)
+    const [reviewMsg, setReviewMsg]= useState("")
+    const [rating, setRating]= useState(0);
+    
+    const handleRatingChange = (getRating)=> {
+        setRating(getRating)
+    }
+    
+    const handleAddReview= ()=>{
+        dispatch(addReviews({
+            userId: user?.id,
+            userName: user?.userName,
+            productId: productDetails?._id,
+            reviewValue: rating,
+            reviewMessage: reviewMsg
+        })).then((data)=>{
+            if(data?.payload?.success){
+                setRating(0);
+                setReviewMsg("")
+                dispatch(getReviews(productDetails._id))
+                toast({
+                    title: "Your Review added successfully!"
+                })
+            }
+        })
+    };
+
+    useEffect(()=>{
+        if(productDetails !== null){
+            dispatch(getReviews(productDetails?._id))
+        }
+    },[productDetails]);
+
+
+    const averageReview = reviews && reviews.length > 0 ?
+     reviews.reduce((sum, reviewItem)=> sum + reviewItem.reviewValue , 0)/ reviews.length : 0
 
     const handleAddToCart = (getCurrentProductId, getTotalStock) => {
         let getCartItem = cartItems.items || [];
@@ -31,7 +70,6 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                         title: `Only ${getQuantity} quantity can be added for this item`,
                         variant: "destructive",
                     });
-
                     return;
                 }
             }
@@ -48,13 +86,23 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                 toast({
                     title: "This Product added to cart!",
                 });
+            }else{
+                return toast({
+                    title: data.message
+                })
             }
         });
     };
+    const handleDialogClose = ()=>{
+        setOpen(false)
+        dispatch(setProductDetails());
+        setRating(0)
+        setReviewMsg("")
+    }
     return (
-        <Dialog open={open} onOpenChange={() => { setOpen(), dispatch(setProductDetails()) }}>
-            <DialogContent className="grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[85vw] lg:max-w-[75vw] ">
-                <div className="relative overflow-hidden rounded-lg ">
+        <Dialog open={open} onOpenChange={handleDialogClose}>
+            <DialogContent className="grid grid-cols-1 h-full overflow-y-scroll  sm:grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[85vw] lg:max-w-[75vw] ">
+                <div className="relative rounded-lg ">
                     <img
                         src={productDetails?.image}
                         alt={productDetails?.title}
@@ -86,17 +134,13 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                         ) : null}
                     </div>
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center-gap-2 mt-2">
-                            <div className="flex items-center gap-0.5">
-                                <StarIcon className="w-5 h-5 fill-primary " />
-                                <StarIcon className="w-5 h-5 fill-primary " />
-                                <StarIcon className="w-5 h-5 fill-primary " />
-                                <StarIcon className="w-5 h-5 fill-primary " />
-                                <StarIcon className="w-5 h-5 fill-primary " />
+                        <div className="flex items-center gap-2 mt-2">
+                            <div className="flex items-center ">
+                                <StarRating rating={averageReview}/>
                             </div>
-                            <span className="text-muted-foreground">(4.5)</span>
+                            <span className="text-muted-foreground">({averageReview.toFixed(2)})</span>
                         </div>
-                        <span className="">{productDetails?.brand} </span>
+                        <span className=" md:block sm:hidden">{productDetails?.brand} </span>
                     </div>
                     <div className="mt-5 mb-5">
                         {productDetails?.totalStock === 0 ?
@@ -107,87 +151,50 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                                 onClick={() => handleAddToCart(
                                     productDetails?._id,
                                     productDetails?.totalStock
-                                  )}
+                                )}
                                 className="w-full"
                             >
                                 Add to Cart
                             </Button>
                         }
-
                     </div>
                     <Separator />
-                    <div className="max-h-[300px] overflow-auto ">
+                    <div className="max-h-[300px]  ">
                         <h2 className="text-xl font-bold mb-4 ">Reviews</h2>
                         <div className="grid gap-6  ">
-                            <div className="flex gap-4">
+                            {reviews?.length > 0 ? reviews.map((reviewItem)=>(
+                                <div key={reviewItem.id} className="flex gap-4">
                                 <Avatar className="w-10  h-10 border ">
                                     <AvatarFallback className="bg-muted-foreground text-white font-bold">
-                                        AH
+                                        {reviewItem?.userName[0].toUpperCase()}
                                     </AvatarFallback>
                                 </Avatar>
                                 <div className="grid gap-1">
                                     <div className="flex items-center gap-2">
-                                        <h3 className="font-bold">Amir Hamza</h3>
-                                    </div>
-                                    <div className="flex items-center gap-0.5">
-                                        <StarIcon className="w-5 h-5 fill-primary " />
-                                        <StarIcon className="w-5 h-5 fill-primary " />
-                                        <StarIcon className="w-5 h-5 fill-primary " />
-                                        <StarIcon className="w-5 h-5 fill-primary " />
-                                        <StarIcon className="w-5 h-5 fill-primary " />
+                                        <h3 className="font-bold">{reviewItem?.userName}</h3>
+                                    </div> 
+                                    <div className="flex items-center">
+                                    <StarRating rating={reviewItem.reviewValue}/>
                                     </div>
                                     <p className="text-muted-foreground">
-                                        This is an awesome product!
+                                        {reviewItem?.reviewMessage}
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex gap-4">
-                                <Avatar className="w-10  h-10 border ">
-                                    <AvatarFallback className="bg-muted-foreground text-white font-bold">
-                                        AH
-                                    </AvatarFallback>
-                                </Avatar>
-                                <div className="grid gap-1">
-                                    <div className="flex items-center gap-2">
-                                        <h3 className="font-bold">Amir Hamza</h3>
-                                    </div>
-                                    <div className="flex items-center gap-0.5">
-                                        <StarIcon className="w-5 h-5 fill-primary " />
-                                        <StarIcon className="w-5 h-5 fill-primary " />
-                                        <StarIcon className="w-5 h-5 fill-primary " />
-                                        <StarIcon className="w-5 h-5 fill-primary " />
-                                        <StarIcon className="w-5 h-5 fill-primary " />
-                                    </div>
-                                    <p className="text-muted-foreground">
-                                        This is an awesome product!
-                                    </p>
+                            )) : <div>No review found!</div>}
+                            
+                            <div className="flex gap-2 mt-10 flex-col">
+                                <Label > Write a review...</Label>
+                                <div className=" flex gap-1">
+                                    <StarRating  rating={rating}
+                                    handleRatingChange={handleRatingChange} />
                                 </div>
-                            </div>
-                            <div className="flex gap-4">
-                                <Avatar className="w-10  h-10 border ">
-                                    <AvatarFallback className="bg-muted-foreground text-white font-bold">
-                                        AH
-                                    </AvatarFallback>
-                                </Avatar>
-                                <div className="grid gap-1">
-                                    <div className="flex items-center gap-2">
-                                        <h3 className="font-bold">Amir Hamza</h3>
-                                    </div>
-                                    <div className="flex items-center gap-0.5">
-                                        <StarIcon className="w-5 h-5 fill-primary " />
-                                        <StarIcon className="w-5 h-5 fill-primary " />
-                                        <StarIcon className="w-5 h-5 fill-primary " />
-                                        <StarIcon className="w-5 h-5 fill-primary " />
-                                        <StarIcon className="w-5 h-5 fill-primary " />
-                                    </div>
-                                    <p className="text-muted-foreground">
-                                        This is an awesome product!
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex gap-2 mt-4">
-                                <Input className="" placeholder="Write your review" />
-                                <Button>Submit</Button>
+                                <Input className=""
+                                name="reviewMsg"
+                                value={reviewMsg}
+                                onChange={(event)=> setReviewMsg(event.target.value)}
+                                placeholder="Write your review" />
+                                <Button onClick={handleAddReview} disabled={reviewMsg.trim() === ""} >Submit</Button>
                             </div>
                         </div>
                     </div>

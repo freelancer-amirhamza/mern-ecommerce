@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Label } from "../../components/ui/label";
 import { Input } from "@/components/ui/input";
 import { FileIcon, UploadCloud, XIcon } from "lucide-react";
@@ -15,9 +15,12 @@ const ProductImageUpload = ({
   setUploadedImageUrl,
   imageLoadingState,
   setImageLoadingState,
+  uploadedImageUrl,
+  isCustomStyle
 }) => {
   const inputRef = useRef(null);
-
+  const [imageUrl, setImageUrl] = useState("")
+  
   const handleImageFileChange = (event) => {
     console.log(event.target.files?.[0]);
     const selectFile = event.target.files?.[0];
@@ -49,10 +52,9 @@ const ProductImageUpload = ({
       "http://localhost:4000/api/admin/products/upload-image",
       data
     );
-    console.log(response, "response");
-
     if (response?.data?.success) {
-      setUploadedImageUrl(response.data.result.url);
+      setUploadedImageUrl(response?.data?.result?.url);
+      setImageUrl(response?.data?.result?.url)
       setImageLoadingState(false);
     }
   };
@@ -62,7 +64,7 @@ const ProductImageUpload = ({
   }, [imageFile]);
 
   return (
-    <div className="w-full max-w-md mx-auto py-2 ">
+    <div className={`w-full mx-auto py-2 ${isCustomStyle ? "" : "max-w-md"}`}>
       <Label className="text-lg font-semibold mb-2 block ">Upload Image</Label>
       <div
         onDragOver={handleDragOver}
@@ -88,12 +90,12 @@ const ProductImageUpload = ({
         ) : (
           imageLoadingState ? 
           <Skeleton className=' h-16 bg-gray-300 ' /> :
-          <div className="flex items-center justify-between  ">
+          <div className="flex items-center justify-center  ">
             <div className="flex items-center">
-              <FileIcon className="w-8 h-8 text-primary mr-2  " />
+              <img src={imageUrl} className="w-4/6 rounded-sm h-full object-contain" alt="" />
             </div>
-            <p className="text-sm font-medium">{imageFile.name}</p>
-            {/* <img src={imageFile?.name} alt="" /> */}
+            <p className="text-sm flex w-full font-medium">{imageFile.name}</p>
+            
             <Button
               size="icon"
               variant="ghost"

@@ -1,13 +1,27 @@
-import { Card, CardHeader, CardTitle } from '@/components/ui/card'
-import React from 'react'
+import { Button } from '@/components/ui/button'
+import { useNavigate } from 'react-router-dom';
+import image from "../../assets/order-complete.gif";
 
 const PaymentSuccessPage = () => {
+  const navigate = useNavigate()
   return (
-    <Card>
-        <CardHeader>
-            <CardTitle>The Payment is successfully created!</CardTitle>
-        </CardHeader>
-    </Card>
+    <>
+    <div className="w-full min-h-screen justify-center flex ">
+      <div className="container mx-auto mt-5 w-full">
+      <img className='mx-auto w-4/5 h-2/4 rounded-lg' 
+      src={image}
+      loading='lazy'
+      alt="" />
+      <h2 className='text-center text-lg mt-6 font-semibold' >Order Successfully Completed 🙌 </h2>
+      <h2 className='text-center text-base mt-2 font-semibold' >Your Order is on it&apos;s way 🏃‍♂️</h2>
+      {/* <h2 className='text-center text-base mt-2 ' ><strong className='text-xl'>Order Id: </strong>{order_id}</h2> */}
+      <Button  onClick={() => navigate("/shop/account")}
+      text-button="View Orders"
+      className="md:w-1/2 w-full mx-auto py-3 mt-5 block">View Orders</Button>
+      </div>
+    </div>
+      
+      </>
   )
 }
 
