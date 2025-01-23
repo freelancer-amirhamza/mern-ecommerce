@@ -1,6 +1,5 @@
 import {
   CircleUserRound,
-  House,
   LogIn,
   LogOut,
   Menu,
@@ -62,7 +61,7 @@ const MenuItems = () => {
 };
 
 const HeaderRightContent = ({openCart}) => {
-  const { user, isAuthenticated } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shoppingCarts);
 
   const navigate = useNavigate();

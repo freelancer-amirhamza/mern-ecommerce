@@ -17,7 +17,7 @@ const PaymentSuccessPage = () => {
       {/* <h2 className='text-center text-base mt-2 ' ><strong className='text-xl'>Order Id: </strong>{order_id}</h2> */}
       <Button  onClick={() => navigate("/shop/account")}
       text-button="View Orders"
-      className="md:w-1/2 w-full mx-auto py-3 mt-5 block">View Orders</Button>
+      className="md:w-1/2 w-full items-center  mx-auto py-3 mt-5 block">View Your Orders</Button>
       </div>
     </div>
       

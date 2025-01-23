@@ -29,7 +29,7 @@ function App() {
   const {user, isAuthenticated, isLoading } = useSelector((state)=> state.auth);
   const [openCart, setOpenCart] = useState(false);
   const dispatch = useDispatch();
-
+  const { cartItems } = useSelector((state) => state.shoppingCarts);
   useEffect(()=>{
     const token = JSON.parse(sessionStorage.getItem("token"))
     dispatch(checkAuth(token))
@@ -80,15 +80,19 @@ function App() {
         </Route>
         <Route path='*' element={<NotFound/>} />
         <Route path='unauth-page' element={<UnAuth/>} />
-
       </Routes>
-
 
       <div className="flex w-full z-50 fixed  bg-slate-100 h-20 sm:hidden bottom-0 ">
         <div className="container w-full mx-auto justify-around text-orange-600 items-center inline-flex">
           <Link className='focus:border-2 w-14 h-14  flex items-center justify-center hover:bg-orange-300/10 duration-75  hover:border-2 border-orange-700  rounded-full ' to={`/shop/home`} ><House /> </Link>
           <Link className='focus:border-2 w-14 h-14  flex items-center justify-center hover:bg-orange-300/10 duration-75  hover:border-2 border-orange-700  rounded-full ' to={`/shop/listing`}><ShoppingBasket /> </Link>
-          <Link onClick={()=> setOpenCart(!openCart)} className='focus:border-2 w-14 h-14  flex items-center justify-center hover:bg-orange-300/10 duration-75  hover:border-2 border-orange-700  rounded-full ' ><ShoppingBag /> </Link>
+          <Link 
+          onClick={()=> setOpenCart(!openCart)}
+           className='focus:border-2 w-14 h-14  flex items-center justify-center
+            hover:bg-orange-300/10 duration-75  hover:border-2 border-orange-700  rounded-full ' >
+              <ShoppingBag className='relative w-full' />
+              <span className="text-xs absolute top-4 ml-4 text-orange-700 ">{cartItems?.items?.length > 0 ? cartItems?.items?.length : null }</span>
+              </Link>
           <Link className='focus:border-2 w-14 h-14  flex items-center justify-center hover:bg-orange-300/10 duration-75  hover:border-2 border-orange-700  rounded-full ' to={`/shop/search`}><Search /> </Link>
         </div>
       </div>
