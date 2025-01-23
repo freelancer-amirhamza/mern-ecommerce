@@ -1,10 +1,12 @@
 import {
   CircleUserRound,
   House,
+  LogIn,
   LogOut,
   Menu,
   ShoppingCart,
   Store,
+  UserRound,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
@@ -50,7 +52,7 @@ const MenuItems = () => {
         <Label
           onClick={() => handleNavigate(menuItem)}
           key={menuItem.id}
-          className="text-sm font-medium cursor-pointer "
+          className="text-sm font-semibold hover:text-orange-600 hover:border-b-2 border-orange-600 cursor-pointer  "
         >
           {menuItem.label}{" "}
         </Label>
@@ -59,13 +61,13 @@ const MenuItems = () => {
   );
 };
 
-const HeaderRightContent = () => {
-  const { user } = useSelector((state) => state.auth);
+const HeaderRightContent = ({openCart}) => {
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shoppingCarts);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [openCartSheet, setOpenCartSheet] = useState(false);
+  const [openCartSheet, setOpenCartSheet] = useState(openCart);
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalQty, setTotalQty] = useState(0)
 
@@ -90,12 +92,16 @@ const HeaderRightContent = () => {
   useEffect(() => {
     dispatch(getCartItems(user?.id));
   }, [dispatch]);
+  
+  useEffect(()=>{
+    setOpenCartSheet(openCart)
+  },[openCart])
   return (
     <div className="flex flex-col  gap-4 lg:items-center lg:flex-row ">
       <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
         <Button
           onClick={() => setOpenCartSheet(true)}
-          className=" w-full justify-between border-1 border-orange-200 hover:border-orange-500 flex"
+          className=" w-full justify-between border-1 border-orange-200 hover:border-orange-500 hover:bg-orange-100/50 flex"
           variant="outline"
         >
           <ShoppingCart className=" w-8 h-8  " />
@@ -121,13 +127,14 @@ const HeaderRightContent = () => {
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Avatar className="bg-black cursor-pointer">
-            <AvatarFallback className=" bg-black text-white font-extrabold ">
-              {user?.userName[0].toUpperCase()}
+          <Avatar className="bg-orange-700 cursor-pointer">
+            <AvatarFallback className=" bg-orange-700 text-white font-extrabold ">
+              {user ? user?.userName[0].toUpperCase() : <UserRound /> }
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent side="right" className="w-56 bg-gray-200">
+          {user? <div>
           <DropdownMenuLabel>Logged in as {user?.userName} </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => navigate("/shop/account")}>
@@ -139,19 +146,35 @@ const HeaderRightContent = () => {
             <LogOut className="mr-2 w-4 h-4 " />
             <span className="font-semibold text-base ">Logout</span>
           </DropdownMenuItem>
+          </div>:
+          <div>
+          <DropdownMenuLabel>Register or Login  </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => navigate("/auth/register")}>
+            <CircleUserRound className=" mr-2 w-6  h-6 " />
+            <span className="font-semibold text-base "> Register</span>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={()=> navigate("/auth/login") }>
+            <LogIn className="mr-2 w-4 h-4 " />
+            <span className="font-semibold text-base ">Login</span>
+          </DropdownMenuItem>
+          </div>
+          }
+          
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
   );
 };
 
-const ShoppingHeader = () => {
+const ShoppingHeader = ({openCart}) => {
   return (
     <header className="sticky w-full z-40 border-b bg-background ">
       <div className="flex items-center justify-between h-16 px-4 md:px-6 ">
         <Link to="/shop/home" className="flex items-center gap-2 ">
-        <Store color="#c76c05" className="h-7 w-7 "  absoluteStrokeWidth />
-          <span className="font-extrabold text-orange-500 text-3xl"> KAZI BAZAR </span>
+        <Store color="#c76c05" className="h-7 w-7 text-[#c76c05] "  absoluteStrokeWidth />
+          <span className="font-extrabold text-orange-500 text-3xl"> KAZI BAZAAR </span>
         </Link>
         <Sheet>
           <SheetTrigger asChild>
@@ -169,7 +192,7 @@ const ShoppingHeader = () => {
           <MenuItems />
         </div>
         <div className="hidden lg:block">
-          <HeaderRightContent />{" "}
+          <HeaderRightContent openCart={openCart} />{" "}
         </div>
       </div>
     </header>

@@ -102,6 +102,55 @@ const createNewOrder = async (req, res) => {
       })
    }
 }
+const cashOnDeliveryOrder = async(req,res)=>{
+   try {
+      const {
+         userId,
+         cartId,
+         cartItems,
+         addressInfo,
+         orderStatus,
+         totalAmount,
+         orderDate,
+         orderUpdateDate,
+      } = req.body;
+
+      const  redirect_urls = {
+         return_url: `${process.env.CLIENT_BASE_URL}/shop/paypal-return`,
+         cancel_url: `${process.env.CLIENT_BASE_URL}/shop/paypal-cancel`
+      }
+
+      
+
+      const newlyCreatedOrder = new Order({
+         userId,
+         cartId,
+         cartItems,
+         addressInfo,
+         orderStatus,
+         totalAmount,
+         orderDate,
+         orderUpdateDate,
+      });
+      await newlyCreatedOrder.save();
+      console.log(newlyCreatedOrder, "new Order")
+      
+      res.status(200).json({
+         success: true,
+         approvalURL: redirect_urls.return_url,
+         orderId: newlyCreatedOrder._id,
+      })
+   } catch (error) {
+      console.log(error)
+      res.status(500).json({
+         success: false,
+         message: "Something is wrong!",
+         approvalURL: redirect_urls.cancel_url,
+      })
+   }
+};
+
+
 
 const createOrder = async (req, res) => {
    try {
@@ -286,4 +335,4 @@ const getOrderDetails = async (req, res) => {
    }
 }
 
-module.exports = { createOrder,createNewOrder, capturePayment, getOrdersByUser, getOrderDetails };
+module.exports = { createOrder,createNewOrder, capturePayment, getOrdersByUser, getOrderDetails ,cashOnDeliveryOrder};

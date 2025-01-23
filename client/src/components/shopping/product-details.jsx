@@ -5,7 +5,6 @@ import { Dialog, DialogContent } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { StarIcon } from "lucide-react";
 import { Input } from "../ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, getCartItems } from "@/store/shop/cart-slice";
@@ -14,14 +13,16 @@ import { setProductDetails } from "@/store/shop/shoppingSlice";
 import { Label } from "../ui/label";
 import StarRating from "../common/star-rating";
 import { addReviews, getReviews } from "@/store/shop/review-slice";
+import { useNavigate } from "react-router-dom";
 
 const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
     const dispatch = useDispatch();
-    const { user } = useSelector((state) => state.auth);
+    const { user, isAuthenticated } = useSelector((state) => state.auth);
     const { cartItems } = useSelector((state) => state.shoppingCarts);
     const {reviews } = useSelector((state)=> state.reviewsSlice)
     const [reviewMsg, setReviewMsg]= useState("")
     const [rating, setRating]= useState(0);
+    const navigate = useNavigate()
     
     const handleRatingChange = (getRating)=> {
         setRating(getRating)
@@ -74,24 +75,33 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                 }
             }
         }
-        dispatch(
-            addToCart({
-                userId: user?.id,
-                productId: getCurrentProductId,
-                quantity: 1,
-            })
-        ).then((data) => {
-            if (data?.payload?.success) {
-                dispatch(getCartItems(user?.id));
-                toast({
-                    title: "This Product added to cart!",
-                });
-            }else{
-                return toast({
-                    title: data.message
+        if(isAuthenticated){
+            dispatch(
+                addToCart({
+                    userId: user?.id,
+                    productId: getCurrentProductId,
+                    quantity: 1,
                 })
-            }
-        });
+            ).then((data) => {
+                if (data?.payload?.success) {
+                    dispatch(getCartItems(user?.id));
+                    toast({
+                        title: "This Product added to cart!",
+                    });
+                }else{
+                    return toast({
+                        title: data.message
+                    })
+                }
+            });
+        }else{
+            toast({
+                title: "Please Login your account before buy this product",
+                variant: "destructive"
+              })
+              navigate("/auth/login")
+        }
+        
     };
     const handleDialogClose = ()=>{
         setOpen(false)
@@ -120,27 +130,27 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                             {productDetails?.description}{" "}
                         </p>
                     </div>
-                    <div className="flex items-center justify-between ">
+                    <div className="flex items-center justify-between gap-2 ">
                         <p
-                            className={`text-2xl font-bold text-muted-foreground ${productDetails?.salePrice > 0 ? "line-through" : ""
+                            className={`text-xl  text-muted-foreground ${productDetails?.salePrice > 0 ? "line-through" : ""
                                 } `}
                         >
-                            ${productDetails?.price}{" "}
+                            TK:{productDetails?.price.toFixed(2)}
                         </p>
                         {productDetails?.salePrice > 0 ? (
-                            <p className="text-2xl font-bold text-green-800  ">
-                                ${productDetails?.salePrice}{" "}
+                            <p className="text-2xl font-bold text-green-700  ">
+                                TK:{productDetails?.salePrice.toFixed(2)}
                             </p>
                         ) : null}
                     </div>
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 mt-2">
-                            <div className="flex items-center ">
+                    <div className="flex items-center w-full justify-between">
+                        <div className="flex items-center justify-between w-full">
+                            <div className="flex p-0 m-0 items-center ">
                                 <StarRating rating={averageReview}/>
                             </div>
-                            <span className="text-muted-foreground">({averageReview.toFixed(2)})</span>
+                            <span className="text-muted-foreground">Rating:({averageReview.toFixed(2)})</span>
                         </div>
-                        <span className=" md:block sm:hidden">{productDetails?.brand} </span>
+                        {/* <span className=" md:block hidden">{productDetails?.brand} </span> */}
                     </div>
                     <div className="mt-5 mb-5">
                         {productDetails?.totalStock === 0 ?

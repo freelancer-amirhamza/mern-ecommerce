@@ -7,11 +7,10 @@ const StarRating = ({ rating, handleRatingChange }) => {
         <Button
             key={star}
             variant="outline"
-            size="icon"
-            className={` p-2 rounded-full transition-colors
+            className={`border-none p-[2px] hover:bg-white focus:outline-none rounded-full transition-colors
                     ${star <= rating
-                    ? "text-yellow-500 hover:bg-black "
-                    : "text-black hover:bg-primary hover:text-primary-foreground"
+                    ? "text-yellow-500  hover:text-yellow-600"
+                    : "text-black/50 hover:text-primary"
                 }
         `}
             onClick={
@@ -19,8 +18,8 @@ const StarRating = ({ rating, handleRatingChange }) => {
             }
         >
             <StarIcon
-                className={`${star <= rating ? "fill-yellow-500" : "fill-black"
-                    } w-5 h-5 `}
+                className={`${star <= rating ? "fill-yellow-500" : "fill-primary-foreground"
+                    } w-6 h-6 `}
             />
         </Button>
     ));

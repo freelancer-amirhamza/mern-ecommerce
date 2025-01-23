@@ -31,6 +31,7 @@ const ShoppingProductTile = ({
                 </div>
                 <CardContent className="p-4">
                     <h2 className="text-xl font-bold mb-2  "> {product.title} </h2>
+                    {/* <span className="text-muted-foreground">Rating:({averageReview.toFixed(2)})</span> */}
                     <div className="flex justify-between items-center mb-2">
                         <span className="text-sm text-muted-foreground">
                             {categoryOptionsMap[product?.category]}{" "}
@@ -40,12 +41,12 @@ const ShoppingProductTile = ({
                         </span>
                     </div>
                     <div className="flex justify-between items-center mb-2">
-                        <span className={`${product?.salePrice > 0 ? "line-through" : ""}`}>
-                            ${product?.price}{" "}
+                        <span className={`${product?.salePrice > 0 ? "line-through text-muted-foreground" : ""}`}>
+                            TK:{product?.price.toFixed(2)}
                         </span>
                         {product?.salePrice > 0 ? (
                             <span className="text-lg text-primary font-semibold ">
-                                ${product?.salePrice}{" "}
+                                TK:{product?.salePrice.toFixed(2)}
                             </span>
                         ) : null}
                     </div>

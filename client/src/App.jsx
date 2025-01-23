@@ -1,5 +1,5 @@
 
-import { Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router-dom';
 import AuthLayout from './components/auth/layout';
 import Register from './pages/auth/register';
 import AdminLayout from './components/admin-view/layout';
@@ -17,16 +17,17 @@ import CheckAuth from './components/common/check-auth';
 import UnAuth from './pages/un-auth';
 import Login from './pages/auth/login';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { checkAuth } from './store/authSlice';
 import { Skeleton } from './components/ui/skeleton';
 import PaymentReturnPage from './pages/shopping/paypal-return';
 import PaymentSuccessPage from './pages/shopping/payment-success';
 import SearchProducts from './pages/shopping/search';
+import { House, Search, ShoppingBag, ShoppingBasket } from 'lucide-react';
 
 function App() {
   const {user, isAuthenticated, isLoading } = useSelector((state)=> state.auth);
-
+  const [openCart, setOpenCart] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(()=>{
@@ -66,7 +67,7 @@ function App() {
 
         <Route path='/shop' element={
           <CheckAuth isAuthenticated={isAuthenticated} user={user} >
-            <ShoppingLayout/>
+            <ShoppingLayout openCart={openCart} />
           </CheckAuth>
         } >
         <Route path='account' element={<ShoppingAccount/>} />
@@ -81,6 +82,16 @@ function App() {
         <Route path='unauth-page' element={<UnAuth/>} />
 
       </Routes>
+
+
+      <div className="flex w-full z-50 fixed  bg-slate-100 h-20 sm:hidden bottom-0 ">
+        <div className="container w-full mx-auto justify-around text-orange-600 items-center inline-flex">
+          <Link className='focus:border-2 w-14 h-14  flex items-center justify-center hover:bg-orange-300/10 duration-75  hover:border-2 border-orange-700  rounded-full ' to={`/shop/home`} ><House /> </Link>
+          <Link className='focus:border-2 w-14 h-14  flex items-center justify-center hover:bg-orange-300/10 duration-75  hover:border-2 border-orange-700  rounded-full ' to={`/shop/listing`}><ShoppingBasket /> </Link>
+          <Link onClick={()=> setOpenCart(!openCart)} className='focus:border-2 w-14 h-14  flex items-center justify-center hover:bg-orange-300/10 duration-75  hover:border-2 border-orange-700  rounded-full ' ><ShoppingBag /> </Link>
+          <Link className='focus:border-2 w-14 h-14  flex items-center justify-center hover:bg-orange-300/10 duration-75  hover:border-2 border-orange-700  rounded-full ' to={`/shop/search`}><Search /> </Link>
+        </div>
+      </div>
     </div>
   )
 }

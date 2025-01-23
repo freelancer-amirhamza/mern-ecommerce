@@ -27,7 +27,7 @@ import {
   getProductDetails,
 } from "@/store/shop/shoppingSlice";
 import ShoppingProductTile from "@/components/shopping/product-tile";
-import { useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { addToCart, getCartItems } from "@/store/shop/cart-slice";
 import { toast } from "@/hooks/use-toast";
 import ProductDetailsDialog from "@/components/shopping/product-details";
@@ -56,7 +56,7 @@ const ShoppingHome = () => {
   const dispatch = useDispatch();
   const { productsList, productDetails } = useSelector((state) => state.shoppingProducts);
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.auth);
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
   const {featureImagesList} = useSelector((state)=> state.commonSlice)
 
 
@@ -68,20 +68,30 @@ const ShoppingHome = () => {
   };
 
   const handleAddToCart = (getCurrentProductId) => {
-    dispatch(
-      addToCart({
-        userId: user?.id,
-        productId: getCurrentProductId,
-        quantity: 1,
+    console.log(isAuthenticated,"true")
+    if(isAuthenticated){
+      dispatch(
+        addToCart({
+          userId: user?.id,
+          productId: getCurrentProductId,
+          quantity: 1,
+        })
+      ).then((data) => {
+        if (data?.payload?.success) {
+          dispatch(getCartItems(user?.id));
+          toast({
+            title: "This Product added to cart!",
+          });
+        }
+      });
+    }else{
+      toast({
+        title: "Please Login your account before buy this product",
+        variant: "destructive"
       })
-    ).then((data) => {
-      if (data?.payload?.success) {
-        dispatch(getCartItems(user?.id));
-        toast({
-          title: "This Product added to cart!",
-        });
-      }
-    });
+      navigate("/auth/login")
+    }
+    
   };
 
   const handleNavigateToListingPage = (getCurrentItem, section) => {
@@ -115,7 +125,7 @@ const ShoppingHome = () => {
   },[dispatch])
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="relative w-full h-[600px] overflow-hidden ">
+      <div className="relative w-full h-[600px] max-sm:h-[300px] overflow-hidden ">
         {featureImagesList && featureImagesList.length > 0 ? featureImagesList.map((slide, index) => (
           <img
             src={slide.image}
@@ -134,7 +144,7 @@ const ShoppingHome = () => {
           }
           variant="outline"
           size="icon"
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 "
+          className="absolute rounded-full  left-4 top-1/2 transform -translate-y-1/2 bg-white/10 text-white hover:bg-white/50 "
         >
           <ChevronLeftIcon size={40} className=" w-8 text-5xl h-8 " />
         </Button>
@@ -144,7 +154,7 @@ const ShoppingHome = () => {
           }
           variant="outline"
           size="icon"
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80"
+          className="absolute  rounded-full right-4 top-1/2 transform -translate-y-1/2 bg-white/10 text-white hover:bg-white/50"
         >
           <ChevronRightIcon size={40} className=" w-8 text-5xl h-8 " />
         </Button>
@@ -219,6 +229,8 @@ const ShoppingHome = () => {
         setOpen={setOpenDetailsDialog}
         productDetails={productDetails}
       />
+
+      
     </div>
   );
 };

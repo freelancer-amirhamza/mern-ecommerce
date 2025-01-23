@@ -38,7 +38,7 @@ const UserCartWrapper = ({ cartItems , setOpenCartSheet}) => {
         </div>
       </div>
       <Button onClick={()=> {
-        navigate("/shop/checkout");
+        navigate(`${cartItems && cartItems?.length > 0 ? "/shop/checkout" : "/auth/login"}`);
         setOpenCartSheet(false);
         }} className="w-full mt-5">Checkout</Button>
     </SheetContent>
