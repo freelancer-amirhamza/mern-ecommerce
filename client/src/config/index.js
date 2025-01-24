@@ -115,28 +115,28 @@ export const shoppingViewHeaderMenuItems = [
     path: "/shop/listing",
   },
   {
-    id: "men",
-    label: "Men",
+    id: "ghee",
+    label: "Ghee",
     path: "/shop/listing",
   },
   {
-    id: "women",
-    label: "Women",
+    id: "oils",
+    label: "Oils",
     path: "/shop/listing",
   },
   {
-    id: "kids",
-    label: "Kids",
+    id: "dates",
+    label: "Dates",
     path: "/shop/listing",
   },
   {
-    id: "footwear",
-    label: "Footwear",
+    id: "honey",
+    label: "Honey",
     path: "/shop/listing",
   },
   {
-    id: "foods",
-    label: "Foods",
+    id: "masala",
+    label: "Masala",
     path: "/shop/listing",
   },
   {
@@ -152,12 +152,12 @@ export const shoppingViewHeaderMenuItems = [
 ];
 
 export const categoryOptionsMap = {
-  men: "Men",
-  women: "Women",
-  kids: "Kids",
+  masala: "Masalas",
+  organic_oil: "Organic Oil",
+  date: "Dates",
+  date_molasses: "Date molasses",
+  honey: "Honey",
   accessories: "Accessories",
-  footwear: "Footwear",
-  foods: "Foods",
 };
 
 export const brandOptionsMap = {
@@ -172,12 +172,12 @@ export const brandOptionsMap = {
 
 export const filterOptions = {
   category: [
-    { id: "men", label: "Men" },
-    { id: "women", label: "Women" },
-    { id: "kids", label: "Kids" },
+    { id: "masala", label: "Masala" },
+    { id: "organic_oil", label: "Organic oil" },
+    { id: "date", label: "Dates" },
     { id: "accessories", label: "Accessories" },
-    { id: "footwear", label: "Footwear" },
-    { id: "foods", label: "Foods" },
+    { id: "date_molasses", label: "Date molasses" },
+    { id: "honey", label: "Honey" },
   ],
   brand: [
     { id: "nike", label: "Nike" },

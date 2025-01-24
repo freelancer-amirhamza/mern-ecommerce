@@ -1,23 +1,19 @@
 import { Button } from "@/components/ui/button";
-import image1 from "../../assets/banner-1.webp";
-import image2 from "../../assets/banner-2.webp";
-import image3 from "../../assets/banner-3.png";
-import image4 from "../../assets/banner-4.png";
+import oils from "../../assets/oils.avif";
+import honey from "../../assets/natural-honey.jpg";
+import khejur_ghurr from "../../assets/khejur-patari-gur.png";
+import masala from "../../assets/Garam-masala.webp";
+import ghee from "../../assets/Ghee.jpg";
+import accessories from "../../assets/Accessories.jpg";
 import {
   Airplay,
-  BabyIcon,
-  BeefIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  CloudLightningIcon,
   Heater,
   Images,
   Shirt,
-  ShirtIcon,
   ShoppingBasket,
-  UmbrellaIcon,
   WashingMachine,
-  WatchIcon,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
@@ -34,12 +30,12 @@ import ProductDetailsDialog from "@/components/shopping/product-details";
 import { getFeatureImages } from "@/store/common/feature-slice";
 
 const categoriesWithIcons = [
-  { id: "men", label: "Men", icon: ShirtIcon },
-  { id: "women", label: "Women", icon: CloudLightningIcon },
-  { id: "kids", label: "Kids", icon: BabyIcon },
-  { id: "accessories", label: "Accessories", icon: WatchIcon },
-  { id: "footwear", label: "Footwear", icon: UmbrellaIcon },
-  { id: "foods", label: "Foods", icon: BeefIcon },
+  { id: "masalas", label: "Masalas", image: masala },
+  { id: "date", label: "Dates", image: khejur_ghurr },
+  { id: "honey", label: "Honey", image: honey },
+  { id: "accessories", label: "Accessories", image: accessories },
+  { id: "organic_oil", label: "Organic Oil", image: oils },
+  { id: "ghee", label: "Ghee", image: ghee },
 ];
 const brandsWithIcons = [
   { id: "nike", label: "Nike", icon: Shirt },
@@ -50,7 +46,7 @@ const brandsWithIcons = [
   { id: "h&m", label: "H&M", icon: Heater },
 ];
 const ShoppingHome = () => {
-  const slides = [image1, image2, image3, image4];
+  
   const [currentSlide, setCurrentSlide] = useState(0);
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false)
   const dispatch = useDispatch();
@@ -173,8 +169,9 @@ const ShoppingHome = () => {
                 className="cursor-pointer hover:shadow-lg transition-shadow bg-gray-200 rounded-lg"
                 key={categoryItem}
               >
-                <CardContent className="flex flex-col items-center justify-center p-6">
-                  <categoryItem.icon className="w-12 h-12 mb-4 text-primary" />
+                <CardContent className="flex flex-col items-center justify-center p-5">
+                  
+                  <img src={categoryItem?.image} alt="image" className="w-28 h-28  rounded-full border-2 border-orange-600 text-primary"  />
                   <span className="font-bold">{categoryItem.label} </span>
                 </CardContent>
               </Card>
@@ -201,7 +198,7 @@ const ShoppingHome = () => {
           </div>
         </div>
       </section>
-      <section className="py-12 bg-gray-50">
+      {/* <section className="py-12 bg-gray-50">
         <div className="container mx-auto p-4">
           <h2 className="text-3xl font-bold text-center mb-8">
             Shop by brands
@@ -223,7 +220,7 @@ const ShoppingHome = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
       <ProductDetailsDialog
         open={openDetailsDialog}
         setOpen={setOpenDetailsDialog}
