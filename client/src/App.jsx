@@ -19,11 +19,11 @@ import Login from './pages/auth/login';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { checkAuth } from './store/authSlice';
-import { Skeleton } from './components/ui/skeleton';
 import PaymentReturnPage from './pages/shopping/paypal-return';
 import PaymentSuccessPage from './pages/shopping/payment-success';
 import SearchProducts from './pages/shopping/search';
 import { House, Search, ShoppingBag, ShoppingBasket } from 'lucide-react';
+import loading from "./assets/loding.gif";
 
 function App() {
   const {user, isAuthenticated, isLoading } = useSelector((state)=> state.auth);
@@ -36,7 +36,9 @@ function App() {
   },[dispatch]);
 
 
-  if(isLoading) return <Skeleton className="w-[800] bg-black h-[600px]" />
+  if(isLoading) return <div className="w-[800] bg-black h-[600px]">
+    <img src={loading} alt="" />
+  </div> 
 
   return (
     <div className="flex flex-col overflow-hidden bg-white">
