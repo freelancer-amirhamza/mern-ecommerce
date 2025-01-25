@@ -133,7 +133,6 @@ const cashOnDeliveryOrder = async(req,res)=>{
          orderUpdateDate,
       });
       await newlyCreatedOrder.save();
-      console.log(newlyCreatedOrder, "new Order")
       
       res.status(200).json({
          success: true,

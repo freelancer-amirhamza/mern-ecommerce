@@ -36,8 +36,8 @@ function App() {
   },[dispatch]);
 
 
-  if(isLoading) return <div className="w-[800] bg-black h-[600px]">
-    <img src={loading} alt="" />
+  if(!isLoading) return <div className="w-full flex justify-center bg-black h-[600px]">
+    <img src={loading} className='w-full h-full object-cover ' alt="" />
   </div> 
 
   return (
