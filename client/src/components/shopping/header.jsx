@@ -87,7 +87,7 @@ const HeaderRightContent = ({openCart}) => {
     dispatch(logoutUser())
     // dispatch(resetTokenAndCredential());
     // sessionStorage.clear();
-    // navigate("/auth/login");
+    navigate("/auth/login");
   }
   useEffect(() => {
     dispatch(getCartItems(user?.id));
