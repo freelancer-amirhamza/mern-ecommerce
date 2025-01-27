@@ -30,8 +30,10 @@ function App() {
   const [openCart, setOpenCart] = useState(false);
   const dispatch = useDispatch();
   const { cartItems } = useSelector((state) => state.shoppingCarts);
+  
   useEffect(()=>{
-    dispatch(checkAuth())
+    const token = JSON.parse(sessionStorage.getItem("token"))
+    dispatch(checkAuth(token))
   },[dispatch]);
 
 

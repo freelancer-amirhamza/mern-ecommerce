@@ -57,29 +57,29 @@ const userLogin = async (req, res) => {
             userName: checkUser.userName,
             role: checkUser.role,
         }, "CLIENT_SECRET_KEY",
-            { expiresIn: "50m" });
-        res.cookie("token", token,{ httpOnly:true, secure:true }).json({
-            success:true,
-            message: "the user is logged in successfully",
-            user:{
-                id: checkUser._id,
-                email: checkUser.email,
-                userName: checkUser.userName,
-                role: checkUser.role,
-            }
-        })
-
-        // res.status(201).json({
-        //     success: true,
-        //     message: "The User is logged successfully!",
-        //     token,
-        //     user: {
+            { expiresIn: "50h" });
+        // res.cookie("token", token,{ httpOnly:true, secure:true }).json({
+        //     success:true,
+        //     message: "the user is logged in successfully",
+        //     user:{
         //         id: checkUser._id,
         //         email: checkUser.email,
         //         userName: checkUser.userName,
         //         role: checkUser.role,
         //     }
         // })
+
+        res.status(201).json({
+            success: true,
+            message: "The User is logged successfully!",
+            token,
+            user: {
+                id: checkUser._id,
+                email: checkUser.email,
+                userName: checkUser.userName,
+                role: checkUser.role,
+            }
+        })
     } catch (error) {
         console.log(error);
         res.status(500).json({
