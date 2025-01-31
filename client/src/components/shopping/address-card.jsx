@@ -3,7 +3,6 @@
 import { Card, CardContent, CardFooter } from '../ui/card'
 import { Label } from '../ui/label'
 import { Button } from '../ui/button'
-import { Checkbox } from '../ui/checkbox';
 
 const AddressCard = ({addressInfo, handleUpdateAddress, handleDeleteAddress, setCurrentSelectedAddress, selectedId}) => {
     

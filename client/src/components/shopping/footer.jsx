@@ -3,14 +3,14 @@ import { Link } from 'react-router-dom';
 import { Button } from '../ui/button';
 import FooterCard from './FooterCard';
 import { FiPhoneCall } from "react-icons/fi";
-import { AiOutlineHome } from "react-icons/ai";
+import { AiOutlineHome, AiOutlineShop } from "react-icons/ai";
 import { HiOutlineMail } from "react-icons/hi";
 
 
 const Footer = () => {
   return (
-    <footer className="bg-white border-t">
-      <div className="container">
+    <footer className="bg-white w-full justify-center flex flex-col border-t">
+      <div className="container mx-auto w-full px-5 md:px-10">
         {/* footer infos */}
         <div className="flex  flex-wrap space-y-4 pb-10 pt-8   border-b justify-between items-center">
           <FooterCard
@@ -55,33 +55,6 @@ const Footer = () => {
               Each product is carefully sourced and crafted to ensure maximum health benefits,
               meeting the highest standards of purity and freshness.
             </p>
-            <span className="flex">
-              <FiPhoneCall className="text-color mt-[5px] " />
-              <div className=" ml-4">
-                <p className="">Hotline 24/7</p>
-                <h3 className="text-2xl font-bold">
-                  {" "}
-                  <a href="tel:+8801921563031"> (+880) 1921-563031</a>
-                </h3>
-              </div>
-            </span>
-            <span className="flex mt-5">
-              <AiOutlineHome className="text-color mt-[5px] " />
-              <address className=" ml-4">
-                <p className="">Merull Badda, Dhaka-1212 Bangladesh </p>
-              </address>
-            </span>
-            <span className="flex mt-5">
-              <HiOutlineMail className="text-color mt-[5px] " />
-              <div className=" ml-4">
-                <p className="">
-                  <a href="mailto:dev.amirhamza@gmail.com">
-                    {" "}
-                    dev.amirhamza@gmail.com
-                  </a>
-                </p>
-              </div>
-            </span>
           </div>
           {/* Links  */}
           <div className="">
@@ -90,26 +63,12 @@ const Footer = () => {
               <ul>
                 <FooterLink href="/" text="About Us" />
                 <FooterLink href="/" text="Contact" />
-                <FooterLink href="/" text="Help Center" />
-                <FooterLink href="/" text="Career" />
+                <FooterLink href="/" text="Checkout" />
+                <FooterLink href="/" text="Shipping" />
                 <FooterLink href="/" text="Policy" />
                 <FooterLink href="/" text="Flash Sale" />
                 <FooterLink href="/" text="Official" />
-                <FooterLink href="/" text="Sitemap" />
-              </ul>
-            </div>
-          </div>
-          {/* Links  */}
-          <div className="">
-            <h2 className="text-lg mb-6 font-bold">Help Center</h2>
-            <div className="">
-              <ul>
                 <FooterLink href="/" text="Payments" />
-                <FooterLink href="/" text="Shipping" />
-                <FooterLink href="/" text="Shipping" />
-                <FooterLink href="/" text="FAQr" />
-                <FooterLink href="/" text="Checkout" />
-                <FooterLink href="/" text="Other Issues" />
               </ul>
             </div>
           </div>
@@ -117,33 +76,48 @@ const Footer = () => {
 
           {/* News */}
           <div className="max-w-sm">
-            <h2 className="text-lg mb-6 font-bold">Farmart Busines</h2>
+            <h2 className="text-lg mb-6 font-bold">Kazi Bazaar Busines</h2>
             <p className="text-color">
               Register now to get updates on promotions and coupns. Don&apos;t worry!
               We not spam
             </p>
-            <div className="flex items-center  mt-5">
-              <div className="flex justify-center w-full  items-center border p-4 rounded">
-                <HiOutlineMail className="text-title text-2xl  " />
-                <input
-                  type="text"
-                  placeholder="Your email..."
-                  className="outline-none relative bg-transparent w-full px-4 "
-                />
+            <span className="flex items-start mt-6">
+              <FiPhoneCall className="text-color text-xl mt-[5px] " />
+              <div className="flex flex-col ml-4">
+                <p className="text-2xl font-semibold text-muted-foreground">Hotline 24/7</p>
+                <h3 className="text-2xl font-semibold text-muted-foreground">
+                  <a href="tel:+8801921563031"> (+880) 1921-563031</a>
+                </h3>
               </div>
-              <Button
-                className="self-stretch py-7 absolute right-1 items-center" 
-              > Subscribe </Button>
-            </div>
+            </span>
+            <span className="flex items-center mt-5">
+              <AiOutlineShop className="text-color  text-xl " />
+              <address className=" ml-4">
+                <p className="">Merull Badda, Dhaka-1212 Bangladesh </p>
+              </address>
+            </span>
+            <span className="flex items-center mt-5">
+              <HiOutlineMail className="text-color text-xl  " />
+              <div className=" ml-4">
+                <p className="">
+                  <a href="mailto:kaziarifmaksud80@gmail.com">
+                    {" "}
+                    kaziarifmaksud80@gmail.com
+                  </a>
+                </p>
+              </div>
+            </span>
           </div>
         </div>
-        {/* Copyright */}
-        <div className="py-8 flex flex-wrap space-y-3 justify-center md:justify-between items-center border-t">
-          <p className="text-sm">&copy; {new Date().getFullYear()}
-            <a className="" href="https://amirhamzadev.com"> Developed by <b>Amir Hamza</b>  </a>  No rights reserved, Build for practice. </p>
-          <img src="./image/footer-new-payment.png" alt="" />
-        </div>
       </div>
+      
+        {/* Copyright */}
+        <div className="py-8 max-sm:mb-12 bg-gray-200 flex w-full flex-wrap space-y-3 justify-center  items-center border-t">
+          <p className="text-sm  text-center">Developed & Maintain by
+            <Link className="hover:text-orange-800 font-bold  hover:underline" to="https://amirhamzadev.com">  Amir Hamza  </Link>
+            &copy;Copyrights: {new Date().getFullYear()} All rights reserved. 
+          </p>
+        </div>
     </footer>
   );
 };

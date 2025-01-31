@@ -11,14 +11,16 @@ import { toast } from "@/hooks/use-toast";
 const ShoppingCheckout = () => {
   const { cartItems } = useSelector((state) => state.shoppingCarts)
   const { user } = useSelector((state) => state.auth);
-  const {approvalURL} = useSelector((state)=> state.orderSlice);
-  const  [currentSelectedAddress, setCurrentSelectedAddress] = useState(null);
+  const { approvalURL } = useSelector((state) => state.orderSlice);
+  const [currentSelectedAddress, setCurrentSelectedAddress] = useState(null);
   const [isPaymentStart, setIsPaymentStart] = useState(false);
   const dispatch = useDispatch();
+  const [shippingCharge, setShippingCharge] = useState(0)
+  console.log(shippingCharge, "true")
 
 
   const handleOrderPaymentData = () => {
-    if(cartItems.length === 0){
+    if (cartItems.length === 0) {
       toast({
         title: "Your cart is empty!",
         description: "please add products to processing payment",
@@ -27,15 +29,22 @@ const ShoppingCheckout = () => {
       return;
     }
 
-    if(currentSelectedAddress === null){
+    if (currentSelectedAddress === null) {
       toast({
         title: "Please Select Your Address",
         variant: "destructive"
       })
       return;
     };
+    if(shippingCharge === 0) {
+      toast({
+        title: "Please Select Your Delivery Method",
+        variant: "destructive"
+      })
+      return;
+    }
 
-    
+
     const orderData = {
       userId: user?.id,
       cartId: cartItems?._id,
@@ -46,39 +55,39 @@ const ShoppingCheckout = () => {
         price: singleCartItem?.salePrice > 0 ? singleCartItem?.salePrice : singleCartItem?.price,
         quantity: singleCartItem?.quantity,
       })),
-      addressInfo : {
-        addressId:currentSelectedAddress?._id,
+      addressInfo: {
+        addressId: currentSelectedAddress?._id,
         address: currentSelectedAddress?.address,
         city: currentSelectedAddress?.city,
         division: currentSelectedAddress?.division,
         pinCode: currentSelectedAddress?.pinCode,
         notes: currentSelectedAddress?.notes,
       },
-      orderStatus : "pending",
-      paymentMethod : "paypal",
+      orderStatus: "pending",
+      paymentMethod: "Cash on delivery",
       paymentStatus: "pending",
-      totalAmount: totalCartAmount,
-      orderDate : new Date(),
-      orderUpdateDate : new Date(),
-      paymentId : '',
-      payerId : "",
+      totalAmount: totalAmount,
+      orderDate: new Date(),
+      orderUpdateDate: new Date(),
+      paymentId: '',
+      payerId: "",
     };
 
-    dispatch(createNewOrder(orderData)).then((data)=> {
+    dispatch(createNewOrder(orderData)).then((data) => {
       console.log(data)
-      if(data?.payload?.success){
+      if (data?.payload?.success) {
         setIsPaymentStart(true)
-      }else{
+      } else {
         setIsPaymentStart(false);
       }
     });
   }
 
 
-  
-  if(approvalURL){
-      window.location.href = approvalURL;
-    }
+
+  if (approvalURL) {
+    window.location.href = approvalURL;
+  }
 
   const totalCartAmount =
     cartItems && cartItems?.items && cartItems?.items?.length > 0
@@ -91,6 +100,8 @@ const ShoppingCheckout = () => {
           currentItem?.quantity, 0
       )
       : 0;
+    
+    const totalAmount = totalCartAmount + shippingCharge;
   return (
 
     <div className="flex flex-col ">
@@ -100,21 +111,44 @@ const ShoppingCheckout = () => {
           alt="" />
       </div>
       <div className="flex container mx-auto w-full flex-col-reverse md:flex-row  gap-3 p-5 m-5">
-        <Address 
-        selectedId={currentSelectedAddress}
-        setCurrentSelectedAddress={setCurrentSelectedAddress} />
+        <Address
+          selectedId={currentSelectedAddress}
+          setCurrentSelectedAddress={setCurrentSelectedAddress} />
         <div className="flex flex-col w-full border rounded-sm flex-1 gap-5 p-5 mt-5">
           {cartItems && cartItems?.items && cartItems?.items.length > 0 ?
             cartItems?.items.map(
               (item) => <UserCartContent cartItem={item} key={item.id} />) : null}
           <div className="mt-8 space-y-4">
             <div className="flex justify-between">
-              <span className="font-bold">Total</span>
+              <span className="font-bold">Subtotal</span>
               <span className="font-bold">${totalCartAmount} </span>
             </div>
+            <div>
+              <h1 className="font-semibold ">Shipping Method</h1>
+              <div className="flex justify-between py-3 items-center ">
+                <div onClick={()=> setShippingCharge(60)}
+                className={`flex items-center gap-3 p-2 border-[3px] rounded-lg hover:bg-orange-100 cursor-pointer
+                ${shippingCharge === 60 ? "border-orange-700" : "" }`}  >
+                  <span className={` w-5 h-5 rounded-full border-2 ${shippingCharge === 60 ? "border-orange-700 bg-orange-300  " : "border-muted-foreground" }`} />
+                  <span className={`font-semibold ${shippingCharge === 60 ? "text-orange-700 " : "text-muted-foreground" } `} >Inside Dhaka</span>
+                </div>
+                <div onClick={()=> setShippingCharge(100)}
+                className={`flex items-center gap-3 rounded-lg p-2 cursor-pointer border-[3px] ${shippingCharge === 100 ? "border-orange-700 " : "" }  `}>
+                  <span className={`w-5 h-5 border-2 rounded-full ${shippingCharge === 100 ? "border-orange-700 bg-orange-300  " : "border-muted-foreground" }  `} />
+                  <span className={`font-semibold ${shippingCharge === 100 ? "text-orange-700 " : "text-muted-foreground" } `}>Outside Dhaka</span>
+                </div>
+                <span className="font-bold">${shippingCharge} </span>
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-bold">Total</span>
+              <span className="font-bold">${totalAmount} </span>
+            </div>
           </div>
+
           <div className="mt-4 w-full">
-            <Button onClick={handleOrderPaymentData} className="w-full " > {isPaymentStart ? "Processing Order..." : "Place Order Cash On Delivery" }</Button>
+            <Button onClick={handleOrderPaymentData} className="w-full " >
+              {isPaymentStart ? "Processing Order..." : "Place Order Cash On Delivery"}</Button>
           </div>
         </div>
 
