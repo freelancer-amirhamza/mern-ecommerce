@@ -19,7 +19,7 @@ const MobileNavbar = ({openCart, setOpenCart}) => {
             hover:bg-orange-300/10 duration-75  hover:border-2 border-orange-700  rounded-full ' >
               <ShoppingBag className='relative w-full' />
               <span className="text-[11px]  text-center rounded-full absolute top-4 ml-4  w-4 h-4 flex items-center justify-center  text-white bg-orange-600 ">
-                {cartItems?.items?.length > 0 ? cartItems?.items?.length +21  : null }</span>
+                {cartItems?.items?.length > 0 ? cartItems?.items?.length  : null }</span>
               </Link>
           <Link className='focus:border-2 w-14 h-14  flex items-center justify-center hover:bg-orange-300/10 duration-75  hover:border-2 border-orange-700  rounded-full ' to={`/shop/search`}><Search /> </Link>
         </div>
