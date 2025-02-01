@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { Minus, Plus, Trash } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,7 +12,7 @@ const UserCartContent = ({ cartItem }) => {
   const { user } = useSelector((state) => state.auth);
   const { productsList } = useSelector((state) => state.shoppingProducts);
   const { cartItems } = useSelector((state) => state.shoppingCarts);
-
+  
   const handleUpdateCartQuantity = (getCartItem, typeOfAction) => {
     if (typeOfAction == "plus") {
       let getCartItems = cartItems.items || [];
@@ -27,8 +27,6 @@ const UserCartContent = ({ cartItem }) => {
         );
         const getTotalStock = productsList[getCurrentProductIndex].totalStock;
 
-        console.log(getCurrentProductIndex, getTotalStock, "getTotalStock");
-
         if (indexOfCurrentCartItem > -1) {
           const getQuantity = getCartItems[indexOfCurrentCartItem].quantity;
           if (getQuantity + 1 > getTotalStock) {
@@ -36,7 +34,6 @@ const UserCartContent = ({ cartItem }) => {
               title: `Only ${getQuantity} quantity can be added for this item`,
               variant: "destructive",
             });
-
             return;
           }
         }
@@ -72,7 +69,6 @@ const UserCartContent = ({ cartItem }) => {
         });
       }
     });
-    console.log(getCartItem?.productId, user?.id, "it's ok");
   };
   return (
     <div className="flex items-center space-x-4">

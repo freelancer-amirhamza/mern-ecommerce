@@ -114,35 +114,35 @@ const ShoppingCheckout = () => {
         <Address
           selectedId={currentSelectedAddress}
           setCurrentSelectedAddress={setCurrentSelectedAddress} />
-        <div className="flex flex-col w-full border rounded-sm flex-1 gap-5 p-5 mt-5">
+        <div className="flex flex-col w-full border rounded-sm flex-1 gap-5 p-5 max-sm:px-1 mt-5">
           {cartItems && cartItems?.items && cartItems?.items.length > 0 ?
             cartItems?.items.map(
               (item) => <UserCartContent cartItem={item} key={item.id} />) : null}
           <div className="mt-8 space-y-4">
             <div className="flex justify-between">
               <span className="font-bold">Subtotal</span>
-              <span className="font-bold">${totalCartAmount} </span>
+              <span className="font-bold">TK:{totalCartAmount} </span>
             </div>
             <div>
-              <h1 className="font-semibold ">Shipping Method</h1>
-              <div className="flex justify-between py-3 items-center ">
+              <h1 className="font-semibold ">Delivery Method</h1>
+              <div className="flex justify-between py-3 items-center gap-1 ">
                 <div onClick={()=> setShippingCharge(60)}
-                className={`flex items-center gap-3 p-2 border-[3px] rounded-lg hover:bg-orange-100 cursor-pointer
+                className={`flex items-center gap-3 max-sm:gap-1 p-2 max-sm:p-1 text-center border-[3px] rounded-lg hover:bg-orange-100 cursor-pointer
                 ${shippingCharge === 60 ? "border-orange-700" : "" }`}  >
-                  <span className={` w-5 h-5 rounded-full border-2 ${shippingCharge === 60 ? "border-orange-700 bg-orange-300  " : "border-muted-foreground" }`} />
+                  <span className={` w-5 h-5 max-sm:h-[18px] rounded-full border-2 ${shippingCharge === 60 ? "border-orange-700 bg-orange-300  " : "border-muted-foreground" }`} />
                   <span className={`font-semibold ${shippingCharge === 60 ? "text-orange-700 " : "text-muted-foreground" } `} >Inside Dhaka</span>
                 </div>
                 <div onClick={()=> setShippingCharge(100)}
-                className={`flex items-center gap-3 rounded-lg p-2 cursor-pointer border-[3px] ${shippingCharge === 100 ? "border-orange-700 " : "" }  `}>
-                  <span className={`w-5 h-5 border-2 rounded-full ${shippingCharge === 100 ? "border-orange-700 bg-orange-300  " : "border-muted-foreground" }  `} />
+                className={`flex items-center gap-3 max-sm:gap-1 max-sm:p-1 justify-center text-center rounded-lg p-2 cursor-pointer border-[3px] ${shippingCharge === 100 ? "border-orange-700 " : "" }  `}>
+                  <span className={`w-5 h-5 max-sm:h-[18px] border-2 rounded-full ${shippingCharge === 100 ? "border-orange-700 bg-orange-300  " : "border-muted-foreground" }  `} />
                   <span className={`font-semibold ${shippingCharge === 100 ? "text-orange-700 " : "text-muted-foreground" } `}>Outside Dhaka</span>
                 </div>
-                <span className="font-bold">${shippingCharge} </span>
+                <span className="font-bold">TK:{shippingCharge} </span>
               </div>
             </div>
             <div className="flex justify-between">
               <span className="font-bold">Total</span>
-              <span className="font-bold">${totalAmount} </span>
+              <span className="font-bold">TK:{totalAmount} </span>
             </div>
           </div>
 
