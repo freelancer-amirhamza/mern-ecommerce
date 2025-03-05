@@ -58,7 +58,7 @@ const ShoppingOrders = () => {
                                 : "bg-orange-600"}`} >{orderItem?.orderStatus}
               </Badge>
               </TableCell>
-              <TableCell>${orderItem?.totalAmount} </TableCell>
+              <TableCell>TK: {orderItem?.totalAmount} </TableCell>
               <TableCell>
                 <Dialog open={openDetailsDialog} onOpenChange={()=>{
                   setOpenDetailsDialog(false)
