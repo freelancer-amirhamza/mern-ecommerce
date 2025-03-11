@@ -65,7 +65,7 @@ const AdminOrdersDetailsView = ({ orderDetails }) => {
                                 <li key={orderItem?.id} className="flex justify-between items-center ">
                                     <span className="">Title: {orderItem?.title} </span>
                                     <span className="">Quantity: {orderItem?.quantity} </span>
-                                    <span className="">Price: ${orderItem?.price} </span>
+                                    <span className="">Price: TK:{orderItem?.price} </span>
                                 </li>
                             )) : null}
 
