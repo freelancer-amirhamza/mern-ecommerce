@@ -32,7 +32,7 @@ const MenuItems = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
-
+  console.log(searchParams)
   const handleNavigate = (getCurrentMenuItem) => {
     sessionStorage.removeItem("filters");
     const currentFilter =
@@ -45,6 +45,7 @@ const MenuItems = () => {
     location.pathname.includes("listing") && currentFilter !== null ?
       setSearchParams(`?category=${getCurrentMenuItem.id}`) :
       navigate(getCurrentMenuItem.path);
+
   };
   return (
     <nav className=" flex flex-col mb-3 lg:mb-0 lg:items-center lg:flex-row gap-6 ">
@@ -61,7 +62,7 @@ const MenuItems = () => {
   );
 };
 
-const HeaderRightContent = ({openCart}) => {
+const HeaderRightContent = ({ openCart }) => {
   const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shoppingCarts);
 
@@ -82,8 +83,7 @@ const HeaderRightContent = ({openCart}) => {
     }, 0)
     setTotalPrice(tPrice)
   }, [cartItems])
-
-  const handleLogout = ()=>{
+  const handleLogout = () => {
     // dispatch(logoutUser())
     dispatch(resetTokenAndCredential());
     sessionStorage.clear();
@@ -92,29 +92,34 @@ const HeaderRightContent = ({openCart}) => {
   useEffect(() => {
     dispatch(getCartItems(user?.id));
   }, [dispatch]);
-  
-  useEffect(()=>{
+
+  useEffect(() => {
     setOpenCartSheet(openCart)
-  },[openCart])
+  }, [openCart])
   return (
     <div className="flex flex-col  gap-4 lg:items-center lg:flex-row ">
       <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
-        <Button
+        <div
           onClick={() => setOpenCartSheet(true)}
-          className=" w-full justify-between border-1 border-orange-200 hover:border-orange-500 hover:bg-orange-100/50 flex"
-          variant="outline"
+          className=" w-full px-2 cursor-pointer py-1 justify-between items-center gap-2 rounded  border-1  bg-orange-500 transition-colors duration-300 hover:bg-orange-600 flex"
         >
-          <ShoppingCart className=" w-8 h-8  " />
-          <div className="flex flex-col ">
-            <span className="text-xs text-orange-600 text-start  font-extrabold ">
-              {totalQty > 0 ? totalQty : 0} items
-            </span>
-            <span className="text-xs  text-orange-600 text-start font-extrabold ">
-              ${totalPrice}
-            </span>
-          </div>
+          <ShoppingCart size={23} className=" animate-bounce text-white" />
 
-        </Button>
+          {totalQty > 0 ? (
+            <div className="flex flex-col ">
+              <span className="text-xs text-white text-start  font-extrabold ">
+                {totalQty} Items
+              </span>
+              <span className="text-xs  text-white text-start font-extrabold ">
+                BDT:{totalPrice}
+              </span>
+            </div>
+          ) : (
+            <span className="text-white m-1 font-semibold">My Cart</span>
+          )}
+
+
+        </div>
         <UserCartWrapper
           setOpenCartSheet={setOpenCartSheet}
           cartItems={
@@ -127,53 +132,53 @@ const HeaderRightContent = ({openCart}) => {
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Avatar className="bg-orange-700 cursor-pointer">
-            <AvatarFallback className=" bg-orange-700 text-white font-extrabold ">
-              {user ? user?.userName[0].toUpperCase() : <UserRound /> }
+          <Avatar className="bg-orange-600 cursor-pointer">
+            <AvatarFallback className=" bg-orange-600 text-white font-extrabold ">
+              {user ? user?.userName[0].toUpperCase() : <UserRound />}
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent side="right" className="w-56 bg-gray-200">
-          {user? <div>
-          <DropdownMenuLabel>Logged in as {user?.userName} </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => navigate("/shop/account")}>
-            <CircleUserRound className=" mr-2 w-6  h-6 " />
-            <span className="font-semibold text-base ">Account</span>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleLogout}>
-            <LogOut className="mr-2 w-4 h-4 " />
-            <span className="font-semibold text-base ">Logout</span>
-          </DropdownMenuItem>
-          </div>:
-          <div>
-          <DropdownMenuLabel>Register or Login  </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => navigate("/auth/register")}>
-            <CircleUserRound className=" mr-2 w-6  h-6 " />
-            <span className="font-semibold text-base "> Register</span>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={()=> navigate("/auth/login") }>
-            <LogIn className="mr-2 w-4 h-4 " />
-            <span className="font-semibold text-base ">Login</span>
-          </DropdownMenuItem>
-          </div>
+          {user ? <div>
+            <DropdownMenuLabel>Logged in as {user?.userName} </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => navigate("/shop/account")}>
+              <CircleUserRound className=" mr-2 w-6  h-6 " />
+              <span className="font-semibold text-base ">Account</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout}>
+              <LogOut className="mr-2 w-4 h-4 " />
+              <span className="font-semibold text-base ">Logout</span>
+            </DropdownMenuItem>
+          </div> :
+            <div>
+              <DropdownMenuLabel>Register or Login  </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => navigate("/auth/register")}>
+                <CircleUserRound className=" mr-2 w-6  h-6 " />
+                <span className="font-semibold text-base "> Register</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => navigate("/auth/login")}>
+                <LogIn className="mr-2 w-4 h-4 " />
+                <span className="font-semibold text-base ">Login</span>
+              </DropdownMenuItem>
+            </div>
           }
-          
+
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
   );
 };
 
-const ShoppingHeader = ({openCart}) => {
+const ShoppingHeader = ({ openCart }) => {
   return (
     <header className="sticky w-full z-40 border-b bg-background ">
       <div className="flex items-center justify-between h-16 px-4 md:px-6 ">
         <Link to="/shop/home" className="flex items-center gap-2 ">
-        <Store color="#c76c05" className="h-7 w-7 text-[#c76c05] "  absoluteStrokeWidth />
+          <Store color="#c76c05" className="h-7 w-7 text-[#c76c05] " absoluteStrokeWidth />
           <span className="font-extrabold text-orange-500 text-3xl"> KAZI BAZAAR </span>
         </Link>
         <Sheet>

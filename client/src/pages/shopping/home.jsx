@@ -25,9 +25,9 @@ import {
 import ShoppingProductTile from "@/components/shopping/product-tile";
 import {  useNavigate } from "react-router-dom";
 import { addToCart, getCartItems } from "@/store/shop/cart-slice";
-import { toast } from "@/hooks/use-toast";
 import ProductDetailsDialog from "@/components/shopping/product-details";
 import { getFeatureImages } from "@/store/common/feature-slice";
+import toast from "react-hot-toast";
 
 const categoriesWithIcons = [
   { id: "masalas", label: "Masalas", image: masala },
@@ -75,16 +75,11 @@ const ShoppingHome = () => {
       ).then((data) => {
         if (data?.payload?.success) {
           dispatch(getCartItems(user?.id));
-          toast({
-            title: "This Product added to cart!",
-          });
+          toast.success("This Product added to cart!");
         }
       });
     }else{
-      toast({
-        title: "Please Login your account before buy this product",
-        variant: "destructive"
-      })
+      toast.error("Please Login your account before buy this product")
       navigate("/auth/login")
     }
     

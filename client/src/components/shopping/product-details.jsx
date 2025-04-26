@@ -8,12 +8,12 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Input } from "../ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, getCartItems } from "@/store/shop/cart-slice";
-import { toast } from "@/hooks/use-toast";
 import { setProductDetails } from "@/store/shop/shoppingSlice";
 import { Label } from "../ui/label";
 import StarRating from "../common/star-rating";
 import { addReviews, getReviews } from "@/store/shop/review-slice";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
     const dispatch = useDispatch();
@@ -40,9 +40,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                 setRating(0);
                 setReviewMsg("")
                 dispatch(getReviews(productDetails._id))
-                toast({
-                    title: "Your Review added successfully!"
-                })
+                toast("Your Review added successfully!")
             }
         })
     };
@@ -85,21 +83,14 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
             ).then((data) => {
                 if (data?.payload?.success) {
                     dispatch(getCartItems(user?.id));
-                    toast({
-                        title: "This Product added to cart!",
-                    });
+                    toast( "This Product added to cart!");
                 }else{
-                    return toast({
-                        title: data.message
-                    })
+                    return toast.error(data.message)
                 }
             });
         }else{
-            toast({
-                title: "Please Login your account before buy this product",
-                variant: "destructive"
-              })
-              navigate("/auth/login")
+            toast.error("Please Login your account before buy this product")
+            navigate("/auth/login")
         }
         
     };

@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { Minus, Plus, Trash } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCartItems, updateCartItems } from "@/store/shop/cart-slice";
-import { toast } from "@/hooks/use-toast";
+import toast from "react-hot-toast";
 
 const UserCartContent = ({ cartItem }) => {
   const dispatch = useDispatch();
@@ -30,10 +30,11 @@ const UserCartContent = ({ cartItem }) => {
         if (indexOfCurrentCartItem > -1) {
           const getQuantity = getCartItems[indexOfCurrentCartItem].quantity;
           if (getQuantity + 1 > getTotalStock) {
-            toast({
-              title: `Only ${getQuantity} quantity can be added for this item`,
-              variant: "destructive",
-            });
+            // toast({
+            //   title: `Only ${getQuantity} quantity can be added for this item`,
+            //   variant: "destructive",
+            // });
+            toast.success(`Only ${getQuantity} quantity can be added for this item`)
             return;
           }
         }
@@ -52,9 +53,8 @@ const UserCartContent = ({ cartItem }) => {
       })
     ).then((data) => {
       if (data) {
-        toast({
-          title: "Cart is updated successfully!",
-        });
+        toast.success("Cart is updated successfully")
+        
       }
     });
   };
@@ -64,9 +64,7 @@ const UserCartContent = ({ cartItem }) => {
       deleteCartItems({ userId: user?.id, productId: getCartItem?.productId })
     ).then((data) => {
       if (data?.payload?.success) {
-        toast({
-          title: "Cart item is deleted successfully",
-        });
+        toast("Cart item is deleted successfully");
       }
     });
   };

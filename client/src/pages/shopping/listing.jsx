@@ -10,7 +10,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { sortOptions } from "@/config";
-import { toast } from "@/hooks/use-toast";
 import { addToCart, getCartItems } from "@/store/shop/cart-slice";
 import {
   getAllFilteredProducts,
@@ -18,6 +17,7 @@ import {
 } from "@/store/shop/shoppingSlice";
 import { ArrowUpDownIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 
@@ -81,10 +81,7 @@ const ShoppingListing = () => {
       if(indexOfCurrentItem > -1){
         const getQuantity = getCartItem[indexOfCurrentItem].quantity
       if(getQuantity + 1 > getTotalStock){
-        toast({
-          title: `Only ${getQuantity} quantity can be added for this item`,
-          variant: "destructive"
-        })
+        toast.error(`Only ${getQuantity} quantity can be added for this item`)
         return
       }
       }
@@ -100,9 +97,7 @@ const ShoppingListing = () => {
     ).then((data)=>{
       if(data?.payload?.success){
         dispatch(getCartItems(user?.id));
-        toast({
-          title:"This Product added to cart!"
-        })
+        toast.success("This Product added to cart!")
       }
     })
   };

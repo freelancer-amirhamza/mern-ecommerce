@@ -20,13 +20,13 @@ const ShoppingProductTile = ({
     }
 
     return (
-        <Card className="w-full mex-w-sm mx-auto">
+        <Card className="w-full mex-w-sm hover:shadow-xl hover:scale-105 duration-300 mx-auto">
             <div className="" onClick={() => handleGetProductDetails(product?._id)}>
                 <div className="relative">
                     <img
                         src={product?.image}
                         alt={product.title}
-                        className="w-full h-[300px] rounded-t-lg object-cover "
+                        className="w-full max-h-[300px] min-h-[300px] rounded-t-lg object-scale-down "
                     />
                     {product?.totalStock <= 0 ? (
                         <Badge className=" absolute top-2 px-1 py-0 left-2 bg-red-500 hover:bg-red-600 ">
@@ -39,7 +39,7 @@ const ShoppingProductTile = ({
                     ) : null}
                 </div>
                 <CardContent className="p-4">
-                    <h2 className="text-xl font-bold mb-2  "> {product.title} </h2>
+                    <h2 className="text-lg font-bold mb-2 line-clamp-1  "> {product.title} </h2>
                     {/* <span className="text-muted-foreground">Rating:({averageReview.toFixed(2)})</span> */}
                     <div className="flex justify-between items-center mb-2">
                         <span className="text-sm text-muted-foreground">
